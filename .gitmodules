@@ -1,0 +1,6 @@
+[submodule "openGL/glfw"]
+	path = openGL/glfw
+	url = https://github.com/glfw/glfw
+[submodule "openGL/glew"]
+	path = openGL/glew
+	url = https://github.com/Perlmint/glew-cmake
