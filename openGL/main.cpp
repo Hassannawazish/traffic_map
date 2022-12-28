@@ -10,6 +10,15 @@ void setWindowHints(){
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 }
 
+void handleKeyInput(GLFWwindow* window, int key, int status, int action, int mods){
+    if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS ){
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
+    }
+    else{
+        std::cout<<"Key : "<<key<<" ; Status : "<<status<<" ; Action : "<<action <<" ; mods: "<<mods << std::endl;
+    }
+}
+
 int main()
 {
     if(!glfwInit()){
@@ -26,6 +35,8 @@ int main()
     }
 
     glfwMakeContextCurrent(window);
+    glfwSetKeyCallback(window, handleKeyInput);
+
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK){
         std::cout<<" GLEW Initialization Failed..........!"<<std::endl;
