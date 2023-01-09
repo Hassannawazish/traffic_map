@@ -1,8 +1,8 @@
 cmake_minimum_required (VERSION 3.2)
 project(graphic)
 
-add_subdirectory(glfw)
-add_subdirectory(glew)
+add_subdirectory(glfw/glfw)
+add_subdirectory(glew/glew)
 
 
 add_executable(graphic main.cpp)

@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic CMakeFiles/graphic.dir/main.cpp.o -o graphic  glfw/glfw/src/libglfw3.a glew/glew/lib/libglew.a -lpthread -lrt -lm -ldl /usr/lib/x86_64-linux-gnu/libGLX.so /usr/lib/x86_64-linux-gnu/libOpenGL.so /usr/lib/x86_64-linux-gnu/libXext.so /usr/lib/x86_64-linux-gnu/libX11.so 
