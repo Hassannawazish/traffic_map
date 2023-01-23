@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(using_markers)
+project(using_markers LANGUAGES CXX CUDA)
 
+enable_language(CUDA)
 add_compile_options(-std=c++11)
 
 find_package(catkin REQUIRED COMPONENTS
