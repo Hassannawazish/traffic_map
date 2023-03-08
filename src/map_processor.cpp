@@ -13,18 +13,17 @@ void fill_lane_containers(std::vector <std::map <std::string, double> > &left_la
         // }        
 
 
-        // for (int i = 0; i < (left_lane_one.size()-1); i+=2){
-        for (int i = 0; i < left_lane_one.size(); i++){
+        for (int i = 0; i < (left_lane_one.size()-1); i+=2){
             std::map <std::string, double> data = left_lane_one[i];
             if(planeview_dat["s"] == data["sOffset"]){
                 pol = data["a"] + (data["b"]*planeview_dat["length"]) + (data["c"]*pow(2,planeview_dat["length"])) + (data["d"]*pow(3,planeview_dat["length"]));
                 break;
             }
-            // std::map <std::string, double> data1 = left_lane_one[i+1];
-            // if(planeview_dat["s"] == data1["sOffset"]){
-            //     pol = data1["a"] + (data1["b"]*planeview_dat["length"]) + (data1["c"]*pow(2,planeview_dat["length"])) + (data1["d"]*pow(3,planeview_dat["length"]));
-            //     break;
-            // }
+            std::map <std::string, double> data1 = left_lane_one[i+1];
+            if(planeview_dat["s"] == data1["sOffset"]){
+                pol = data1["a"] + (data1["b"]*planeview_dat["length"]) + (data1["c"]*pow(2,planeview_dat["length"])) + (data1["d"]*pow(3,planeview_dat["length"]));
+                break;
+            }
         }
 
         right_lane_X1.push_back(planeview_dat["x"] + pol*cos(planeview_dat["hdg"]+(270*(PI/180))));
