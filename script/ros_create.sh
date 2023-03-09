@@ -2,7 +2,7 @@
 mkdir -p ~/catkin_ws/src
 source /opt/ros/noetic/setup.bash
 cd ../..
-cp -R traffic_map ~/
+sudo cp -R traffic_map ~/
 cd ~/catkin_ws/
 catkin_make
 catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3

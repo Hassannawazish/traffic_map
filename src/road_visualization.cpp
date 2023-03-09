@@ -23,38 +23,45 @@ int main(int argc, char** argv )
   std::cout<<"No. of Geometeries = "<<Config::singleton().num_of_geometeries<<std::endl; 
   std::cout<<"Road Length = "<<Config::singleton().road_length<<std::endl;
   map_process processed;
-  std::map< std::string, std::vector<double>> lanes_coords = processed.get_right_lane(1);
-  std::vector< double> x1 =  lanes_coords["x1"];
-  std::vector< double> y1 =  lanes_coords["y1"];
+  // std::map< std::string, std::vector<double>> lanes_coords = processed.get_right_lane(1);
+  std::vector< double> x1 =  processed.get_right_lane(1)["x1"];
+  std::vector< double> y1 =  processed.get_right_lane(1)["y1"];
+  std::vector< double> x2 =  processed.get_right_lane(1)["x2"];
+  std::vector< double> y2 =  processed.get_right_lane(1)["y2"];
 
   while (ros::ok())
   {
-    visualization_msgs::Marker Ref_line, left_lane1;   
-    left_lane1.header.frame_id = Ref_line.header.frame_id= "map";  
-    left_lane1.header.stamp = Ref_line.header.stamp = ros::Time::now();   
-    left_lane1.ns = Ref_line.ns="road_visualization";  
+    visualization_msgs::Marker Ref_line, right_lane1, right_lane2;   
+    right_lane2.header.frame_id = right_lane1.header.frame_id = Ref_line.header.frame_id= "map";  
+    right_lane2.header.stamp = right_lane1.header.stamp = Ref_line.header.stamp = ros::Time::now();   
+    right_lane2.ns = right_lane1.ns = Ref_line.ns="road_visualization";  
     Ref_line.type = visualization_msgs::Marker::LINE_STRIP;
-    left_lane1.type = visualization_msgs::Marker::LINE_STRIP; 
-    left_lane1.action = Ref_line.action = visualization_msgs::Marker::ADD;
+    right_lane2.type = right_lane1.type = visualization_msgs::Marker::LINE_STRIP; 
+    right_lane2.action = right_lane1.action = Ref_line.action = visualization_msgs::Marker::ADD;
     Ref_line.id = 0;
-    left_lane1.id = 1;
+    right_lane1.id = 1;
+    right_lane2.id = 2;
     Ref_line.pose.orientation.w = 1.0;//stod(Config::singleton().center_lane_dimentions_rm["width"]);
     //std::map <std::string, std::string> rm_data = stod(Config::singleton().left_lane_dimentions_rm[3]);
-    //left_lane1.pose.orientation.w = rm_data["width"];
-    left_lane1.pose.orientation.w = 1.0;
-    left_lane1.scale.x  = Ref_line.scale.x = 0.1;
-    left_lane1.scale.y  = Ref_line.scale.y = 0.1;
-    left_lane1.scale.z = Ref_line.scale.z = 0;
+    //right_lane1.pose.orientation.w = rm_data["width"];
+    right_lane2.pose.orientation.w = right_lane1.pose.orientation.w = 1.0;
+    right_lane2.scale.x  = right_lane1.scale.x  = Ref_line.scale.x = 0.1;
+    right_lane2.scale.y = right_lane1.scale.y  = Ref_line.scale.y = 0.1;
+    right_lane2.scale.z = right_lane1.scale.z = Ref_line.scale.z = 0;
     
-    left_lane1.color.a = Ref_line.color.a = 1.0;
+    right_lane2.color.a = right_lane1.color.a = Ref_line.color.a = 1.0;
 
     Ref_line.color.r = 1.0;
     Ref_line.color.g = 0.0;
     Ref_line.color.b = 0.0;
 
-    left_lane1.color.r = 0.0;
-    left_lane1.color.g = 1.0;
-    left_lane1.color.b = 0.0;
+    right_lane1.color.r = 0.0;
+    right_lane1.color.g = 1.0;
+    right_lane1.color.b = 0.0;
+
+    right_lane2.color.r = 0.0;
+    right_lane2.color.g = 1.0;
+    right_lane2.color.b = 0.0;
 
     for (int i = 0; i < Config::singleton().planeview_data.size(); ++i)
       {
@@ -69,19 +76,31 @@ int main(int argc, char** argv )
       }
     
     for (int i = 0; i < Config::singleton().planeview_data.size(); ++i){
-      geometry_msgs::Point pl1;
+      geometry_msgs::Point pr1;
       #pragma omp critical
       {
-      pl1.x=x1[i];
-      pl1.y=y1[i];
-      pl1.z=0.0;
-      left_lane1.points.push_back(pl1);
+      pr1.x=x1[i];
+      pr1.y=y1[i];
+      pr1.z=0.0;
+      right_lane1.points.push_back(pr1);
+      }
+    }
+
+    for (int i = 0; i < Config::singleton().planeview_data.size(); ++i){
+      geometry_msgs::Point pr2;
+      #pragma omp critical
+      {
+      pr2.x=x2[i];
+      pr2.y=y2[i];
+      pr2.z=0.0;
+      right_lane2.points.push_back(pr2);
       }
     }
 
     
     marker_pub.publish(Ref_line);
-    marker_pub.publish(left_lane1);
+    marker_pub.publish(right_lane1);
+    marker_pub.publish(right_lane2);
       r.sleep();
       f+= 0.04;
   }
