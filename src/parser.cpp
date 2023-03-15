@@ -172,12 +172,10 @@ void Config::parse() {
                                     right_lane_dims.clear();
                                 }
                             }
-                            config.right_lane_dimentions.push_back(width_tages);
-                            std::map<int, int> right_lane_frames;
-                            right_lane_frames.insert(std::pair<int, int>((id_info*(-1)), width_tages.size()));
-                            config.right_lanes_frames.push_back(right_lane_frames);
+                            config.right_lanes_frames.insert(std::pair<int, std::vector<std::map<std::string, double>>>(id_info, width_tages));
                             id_info++;
                         }
+                        config.number_of_right_lanes = config.right_lanes_frames.size();
                     }
                 }
             }
@@ -194,4 +192,3 @@ Config& Config::singleton()
   static Config instance;
   return instance;
 }
-

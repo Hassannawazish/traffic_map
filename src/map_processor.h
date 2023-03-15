@@ -8,7 +8,7 @@ class map_process
 private:
     //std::map< std::string, std::vector<double>> right_lane;
 public:
-    std::map< std::string, std::vector<double>> right_lane;
+    std::map< std::string, std::vector<double>> left_lane;
     map_process();
-    std::map< std::string, std::vector<double>> get_right_lane(int lane_number);
+    std::map< std::string, std::vector<double>> get_left_lane(int lane_number);
 };
