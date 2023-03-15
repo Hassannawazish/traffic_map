@@ -32,7 +32,7 @@ public:
   std::vector <std::map<std::string, double> > planeview_data;
 
 //////////////////////////Left Lanes////////////////////////////////////////////
-  int number_of_left_lanes;
+  int number_of_left_lanes, number_of_right_lanes;
   std::vector <std::map<std::string, std::string> > left_lane_attributes, left_lane_dimentions_rm;
   std::map<int, std::vector <std::map <std::string, double> > > left_lanes_frames;
   // std::vector<std::map<int, std::vector<std::map<std::string, double>> >> left_lanes_frames;
@@ -43,10 +43,8 @@ public:
 
 //////////////////////Right Lane///////////////////////////////////////////
   std::vector <std::map<std::string, std::string> > right_lane_attributes, right_lane_dimentions_rm;
-  std::vector <std::vector <std::map<std::string, double> > > right_lane_dimentions;
-  std::vector<std::map<int, int> > right_lanes_frames;
+  std::map<int, std::vector <std::map <std::string, double> > > right_lanes_frames;
+  // std::vector <std::vector <std::map<std::string, double> > > right_lane_dimentions;
+  // std::vector<std::map<int, int> > right_lanes_frames;
 
 };
-
-
-
