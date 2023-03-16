@@ -43,6 +43,7 @@ void Config::parse() {
         doc.load_file(env_filename);
     #endif
     config.num_of_lanes = 0;
+    int num_of_geom = 0;
 
     pugi::xml_node root_node = doc.child("OpenDRIVE");
     pugi::xml_node parent_node= root_node.first_child().next_sibling();
@@ -59,7 +60,7 @@ void Config::parse() {
         if (!map_components.compare("planView")) {
             start = std::chrono::system_clock::now();
             for (pugi::xml_node grand_child = child.first_child(); grand_child; grand_child = grand_child.next_sibling()) {
-                config.num_of_geometeries++;
+                num_of_geom++;
                 std::map<std::string, double> planview_parameters;
                 for (pugi::xml_attribute attr = grand_child.first_attribute(); attr; attr = attr.next_attribute()) {
                     std::string names = attr.name();
@@ -181,6 +182,7 @@ void Config::parse() {
             }
         }
     }
+    config.num_of_geometeries = & num_of_geom;
     std::chrono::duration<double> elapsed_seconds = end - start;
     std::time_t end_time = std::chrono::system_clock::to_time_t(end);
 

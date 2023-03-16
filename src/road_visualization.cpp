@@ -20,7 +20,7 @@ int main(int argc, char** argv )
   Config::singleton().parse();
   std::cout<<"Total Number of thread = "<<procs<<std::endl;
   std::cout<<"lanes = "<<Config::singleton().num_of_lanes<<std::endl;
-  std::cout<<"No. of Geometeries = "<<Config::singleton().num_of_geometeries<<std::endl; 
+  std::cout<<"No. of Geometeries = "<< *Config::singleton().num_of_geometeries<<std::endl; 
   std::cout<<"Road Length = "<<Config::singleton().road_length<<std::endl;
   map_process processed;
   // std::map< std::string, std::vector<double>> lanes_coords = processed.get_right_lane(1);

@@ -27,7 +27,7 @@ public:
   // Vars ...
   double road_length;
 	int num_of_lanes;
-  int num_of_geometeries;
+  int* num_of_geometeries; 
   std::map <std::string, std::string> road_specs;
   std::vector <std::map<std::string, double> > planeview_data;
 
