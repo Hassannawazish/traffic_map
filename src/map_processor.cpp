@@ -80,12 +80,8 @@ void fill_lane_containers(std::vector <std::map <std::string, double> > &left_la
 }
 
 map_process::map_process(){
-    std::map<int, std::vector <std::map <std::string, double> > > frameLeft = Config::singleton().left_lanes_frames;
+    std::map<int, std::vector <std::map <std::string, double> > > *frameLeft = &Config::singleton().left_lanes_frames;
     std::map<int, std::vector <std::map <std::string, double> > > frameRight = Config::singleton().right_lanes_frames;
-    
-    std::vector <std::map <std::string, double> > *left_lane_one = &frameLeft[1];
-    std::vector <std::map <std::string, double> > left_lane_two = frameLeft[2];
-    std::vector <std::map <std::string, double> > left_lane_three = frameLeft[3];
     std::vector<double> left_lane_X1, left_lane_Y1, left_lane_X2, left_lane_Y2, left_lane_X3, left_lane_Y3;
 
     std::vector <std::map <std::string, double> > right_lane_one = frameRight[1];
@@ -93,9 +89,9 @@ map_process::map_process(){
     std::vector <std::map <std::string, double> > right_lane_three = frameRight[3];
     std::vector<double> right_lane_X1, right_lane_Y1, right_lane_X2, right_lane_Y2, right_lane_X3, right_lane_Y3;
     
-    fill_lane_containers(*left_lane_one,
-                         left_lane_two,
-                         left_lane_three,
+    fill_lane_containers((*frameLeft).at(1),
+                         (*frameLeft).at(2),
+                         (*frameLeft).at(3),
                          left_lane_X1,
                          left_lane_Y1,
                          left_lane_X2,
