@@ -82,7 +82,13 @@ void fill_lane_containers(std::vector <std::map <std::string, double> > &left_la
 map_process::map_process(){
     std::map<int, std::vector <std::map <std::string, double> > > *frameLeft = &Config::singleton().left_lanes_frames;
     std::map<int, std::vector <std::map <std::string, double> > > frameRight = Config::singleton().right_lanes_frames;
-    std::vector<double> left_lane_X1, left_lane_Y1, left_lane_X2, left_lane_Y2, left_lane_X3, left_lane_Y3;
+    std::vector<double> *left_lane_X1{nullptr}, *left_lane_Y1{nullptr}, *left_lane_X2{nullptr}, *left_lane_Y2{nullptr}, *left_lane_X3{nullptr}, *left_lane_Y3{nullptr};
+    left_lane_X1 = new std::vector<double>;
+    left_lane_Y1 = new std::vector<double>;
+    left_lane_X2 = new std::vector<double>;
+    left_lane_Y2 = new std::vector<double>;
+    left_lane_X3 = new std::vector<double>;
+    left_lane_Y3 = new std::vector<double>;
 
     std::vector <std::map <std::string, double> > right_lane_one = frameRight[1];
     std::vector <std::map <std::string, double> > right_lane_two = frameRight[2];
@@ -91,13 +97,13 @@ map_process::map_process(){
     
     fill_lane_containers((*frameLeft).at(1),
                          (*frameLeft).at(2),
-                         (*frameLeft).at(3),
-                         left_lane_X1,
-                         left_lane_Y1,
-                         left_lane_X2,
-                         left_lane_Y2,
-                         left_lane_X3,
-                         left_lane_Y3,
+                         frameLeft->at(3),
+                         *left_lane_X1,
+                         *left_lane_Y1,
+                         *left_lane_X2,
+                         *left_lane_Y2,
+                         *left_lane_X3,
+                         *left_lane_Y3,
                          "left");
     
     fill_lane_containers(right_lane_one,
@@ -111,24 +117,24 @@ map_process::map_process(){
                          right_lane_Y3,
                          "right");
 
-    left_lane.insert(std::pair<std::string, std::vector<double>>("x1", left_lane_X1));
-    left_lane.insert(std::pair<std::string, std::vector<double>>("y1", left_lane_Y1));
-    left_lane.insert(std::pair<std::string, std::vector<double>>("x2", left_lane_X2));
-    left_lane.insert(std::pair<std::string, std::vector<double>>("y2", left_lane_Y2));
-    left_lane.insert(std::pair<std::string, std::vector<double>>("x3", left_lane_X3));
-    left_lane.insert(std::pair<std::string, std::vector<double>>("y3", left_lane_Y3));
+    left_lane.insert(std::pair<std::string, std::vector<double>>("x1", *left_lane_X1));
+    left_lane.insert(std::pair<std::string, std::vector<double>>("y1", *left_lane_Y1));
+    left_lane.insert(std::pair<std::string, std::vector<double>>("x2", *left_lane_X2));
+    left_lane.insert(std::pair<std::string, std::vector<double>>("y2", *left_lane_Y2));
+    left_lane.insert(std::pair<std::string, std::vector<double>>("x3", *left_lane_X3));
+    left_lane.insert(std::pair<std::string, std::vector<double>>("y3", *left_lane_Y3));
     right_lane.insert(std::pair<std::string, std::vector<double>>("x1", right_lane_X1));
     right_lane.insert(std::pair<std::string, std::vector<double>>("y1", right_lane_Y1));
     right_lane.insert(std::pair<std::string, std::vector<double>>("x2", right_lane_X2));
     right_lane.insert(std::pair<std::string, std::vector<double>>("y2", right_lane_Y2));
     right_lane.insert(std::pair<std::string, std::vector<double>>("x3", right_lane_X3));
     right_lane.insert(std::pair<std::string, std::vector<double>>("y3", right_lane_Y3));
-    left_lane_X1.clear();
-    left_lane_Y1.clear();
-    left_lane_X2.clear();
-    left_lane_Y2.clear();
-    left_lane_X3.clear();
-    left_lane_Y3.clear();
+    delete left_lane_X1;
+    delete left_lane_Y1;
+    delete left_lane_X2;
+    delete left_lane_Y2;
+    delete left_lane_X3;
+    delete left_lane_Y3;
     right_lane_X1.clear();
     right_lane_Y1.clear();
     right_lane_X2.clear();
