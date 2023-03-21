@@ -1,8 +1,8 @@
 #include "map_processor.h"
 
-void fill_lane_containers(std::vector <std::map <std::string, double> > &left_lane_one,
-                        std::vector <std::map <std::string, double> > &left_lane_two,
-                        std::vector <std::map <std::string, double> > &left_lane_three,  
+void fill_lane_containers(const std::vector <std::map <std::string, double> > &left_lane_one,
+                        const std::vector <std::map <std::string, double> > &left_lane_two,
+                        const std::vector <std::map <std::string, double> > &left_lane_three,  
                         std::vector<double> &left_lane_X1, 
                         std::vector<double> &left_lane_Y1,
                         std::vector<double> &left_lane_X2, 
@@ -80,7 +80,7 @@ void fill_lane_containers(std::vector <std::map <std::string, double> > &left_la
 }
 
 map_process::map_process(){
-    std::map<int, std::vector <std::map <std::string, double> > > *frameLeft = &Config::singleton().left_lanes_frames;
+    const std::map<int, std::vector <std::map <std::string, double> > > *frameLeft = &Config::singleton().left_lanes_frames;
     std::map<int, std::vector <std::map <std::string, double> > > frameRight = Config::singleton().right_lanes_frames;
     std::vector<double> *left_lane_X1{nullptr}, *left_lane_Y1{nullptr}, *left_lane_X2{nullptr}, *left_lane_Y2{nullptr}, *left_lane_X3{nullptr}, *left_lane_Y3{nullptr};
     left_lane_X1 = new std::vector<double>;
