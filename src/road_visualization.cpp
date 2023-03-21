@@ -23,7 +23,7 @@ int main(int argc, char** argv )
   std::cout<<"No. of Geometeries = "<< *Config::singleton().num_of_geometeries<<std::endl; 
   std::cout<<"Road Length = "<<Config::singleton().road_length<<std::endl;
   map_process processed;
-  // std::map< std::string, std::vector<double>> lanes_coords = processed.get_right_lane(1);
+
   double *x1 {nullptr};
   x1 = new double [processed.get_lane(1)["x1"].size()];
   for (int i = 0; i < processed.get_lane(1)["x1"].size(); i++)
@@ -112,15 +112,15 @@ int main(int argc, char** argv )
       geometry_msgs::Point pl1, pl2, pl3;
       #pragma omp critical
       {
-      pl1.x=x1[i];
-      pl1.y=y1[i];
-      pl1.z=0.0;
-      pl2.x=x2[i];
-      pl2.y=y2[i];
-      pl2.z=0.0;
-      pl3.x=x3[i];
-      pl3.y=y3[i];
-      pl3.z=0.0;
+      pl1.x = *(x1 + i);               // subscript/offset notaions to access pointer array data      name[index] / *(name + index) 
+      pl1.y = y1[i];
+      pl1.z = 0.0;
+      pl2.x = x2[i];
+      pl2.y = y2[i];
+      pl2.z = 0.0;
+      pl3.x = x3[i];
+      pl3.y = y3[i];
+      pl3.z = 0.0;
 
       left_lane1.points.push_back(pl1);
       left_lane2.points.push_back(pl2);
