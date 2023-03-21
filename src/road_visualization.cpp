@@ -24,7 +24,10 @@ int main(int argc, char** argv )
   std::cout<<"Road Length = "<<Config::singleton().road_length<<std::endl;
   map_process processed;
   // std::map< std::string, std::vector<double>> lanes_coords = processed.get_right_lane(1);
-  std::vector< double> x1 =  processed.get_lane(1)["x1"];
+  double *x1 {nullptr};
+  x1 = new double [processed.get_lane(1)["x1"].size()];
+  for (int i = 0; i < processed.get_lane(1)["x1"].size(); i++)
+    x1[i] = processed.get_lane(1)["x1"][i];
   std::vector< double> y1 =  processed.get_lane(1)["y1"];
   std::vector< double> x2 =  processed.get_lane(1)["x2"];
   std::vector< double> y2 =  processed.get_lane(1)["y2"];
@@ -155,4 +158,5 @@ int main(int argc, char** argv )
       r.sleep();
       f+= 0.04;
   }
+  delete [] x1;
 }
