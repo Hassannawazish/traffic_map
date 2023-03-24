@@ -80,7 +80,7 @@ void fill_lane_containers(const std::vector <std::map <std::string, double> > &l
 }
 
 map_process::map_process(){
-    const std::map<int, std::vector <std::map <std::string, double> > > *frameLeft = &Config::singleton().left_lanes_frames;
+    const std::map<int, std::vector <std::map <std::string, double> > >* const frameLeft = &Config::singleton().left_lanes_frames;
     std::map<int, std::vector <std::map <std::string, double> > > frameRight = Config::singleton().right_lanes_frames;
     std::vector<double> *left_lane_X1{nullptr}, *left_lane_Y1{nullptr}, *left_lane_X2{nullptr}, *left_lane_Y2{nullptr}, *left_lane_X3{nullptr}, *left_lane_Y3{nullptr};
     left_lane_X1 = new std::vector<double>;
