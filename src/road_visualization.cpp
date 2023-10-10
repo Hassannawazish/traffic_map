@@ -1,11 +1,15 @@
 #include <ros/ros.h>
 #include <visualization_msgs/Marker.h>
+#include <sensor_msgs/CameraInfo.h>
+
 #include <fstream>
-#include "map_processor.h"
-#include "types.h"
 #include <random>
+
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
+
+#include "map_processor.h"
+#include "types.h"
 
 extern const int procs;
 
@@ -14,6 +18,7 @@ int main(int argc, char** argv )
   ros::init(argc, argv, "road_visualization");
   ros::NodeHandle n;
   ros::Rate r(30);
+  ros::Publisher camera_info_pub = n.advertise<sensor_msgs::CameraInfo>("/camera_info", 1);
   ros::Publisher marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 10);
   float f = 0.0;
   
@@ -59,7 +64,11 @@ int main(int argc, char** argv )
 
   while (ros::ok())
   {
-    visualization_msgs::Marker Ref_line, left_lane1, left_lane2, left_lane3, right_lane1, right_lane2, right_lane3;   
+    visualization_msgs::Marker Ref_line, left_lane1, left_lane2, left_lane3, right_lane1, right_lane2, right_lane3;
+    sensor_msgs::CameraInfo camera_info_msg;
+    camera_info_msg.header.stamp = ros::Time::now();
+    camera_info_msg.header.frame_id = "map";
+
     right_lane3.header.frame_id = right_lane2.header.frame_id = right_lane1.header.frame_id = left_lane3.header.frame_id = left_lane2.header.frame_id = left_lane1.header.frame_id = Ref_line.header.frame_id= "map";  
     right_lane3.header.stamp = right_lane2.header.stamp = right_lane1.header.stamp = left_lane3.header.stamp = left_lane2.header.stamp = left_lane1.header.stamp = Ref_line.header.stamp = ros::Time::now();   
     right_lane3.ns = right_lane2.ns = right_lane1.ns = left_lane3.ns = left_lane2.ns = left_lane1.ns = Ref_line.ns="road_visualization";  
@@ -111,6 +120,19 @@ int main(int argc, char** argv )
     right_lane3.color.r = 0.0;
     right_lane3.color.g = 0.0;
     right_lane3.color.b = 1.0;
+
+    // sensor_msgs::CameraInfo camera_info_msg;
+    //     camera_info_msg.header.stamp = ros::Time::now();
+    //     camera_info_msg.width = 640;
+    //     camera_info_msg.height = 480;
+    //     camera_info_msg.K[0] = 4808.0;  // fx
+    //     camera_info_msg.K[4] = 3099.0;  // fy
+    //     camera_info_msg.K[2] = camera_info_msg.width / 2.0;  // cx
+    //     camera_info_msg.K[5] = camera_info_msg.height / 2.0;  // cy
+    //     camera_info_msg.distortion_model = "equidistant";
+    camera_info_msg.P[3] = 4808.0;  // Set the initial x position
+    camera_info_msg.P[7] = 3099.0;  // Set the initial y position
+    camera_info_msg.P[11] = 0.0; // Set the initial z position
 
     for (int i = 0; i < Config::singleton().planeview_data.size(); ++i)
       {
@@ -167,7 +189,8 @@ int main(int argc, char** argv )
     moving_cube.pose.position.x = 4808;
     moving_cube.pose.position.y = 3099;
     moving_cube.pose.position.z = 0.5;
-
+    
+    camera_info_pub.publish(camera_info_msg);
     marker_pub.publish(Ref_line);
     marker_pub.publish(left_lane1);
     marker_pub.publish(left_lane2);
