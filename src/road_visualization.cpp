@@ -41,6 +41,22 @@ int main(int argc, char** argv )
   std::vector< double> xr3 =  processed.get_lane(2)["x3"];
   std::vector< double> yr3 =  processed.get_lane(2)["y3"];
 
+  visualization_msgs::Marker moving_cube;
+  moving_cube.header.frame_id = "map";
+  moving_cube.header.stamp = ros::Time::now();
+  moving_cube.ns = "road_visualization";
+  moving_cube.type = visualization_msgs::Marker::CUBE;
+  moving_cube.action = visualization_msgs::Marker::ADD;
+  moving_cube.id = 7;  // Make sure the ID is unique
+  moving_cube.scale.x = 1.0;
+  moving_cube.scale.y = 1.0;
+  moving_cube.scale.z = 1.0;
+  moving_cube.color.r = 1.0;
+  moving_cube.color.g = 0.0;
+  moving_cube.color.b = 0.0;
+  moving_cube.color.a = 1.0;
+  moving_cube.pose.orientation.w = 1.0;
+
   while (ros::ok())
   {
     visualization_msgs::Marker Ref_line, left_lane1, left_lane2, left_lane3, right_lane1, right_lane2, right_lane3;   
@@ -148,6 +164,10 @@ int main(int argc, char** argv )
       }
     }
 
+    moving_cube.pose.position.x = 4808;
+    moving_cube.pose.position.y = 3099;
+    moving_cube.pose.position.z = 0.5;
+
     marker_pub.publish(Ref_line);
     marker_pub.publish(left_lane1);
     marker_pub.publish(left_lane2);
@@ -155,6 +175,8 @@ int main(int argc, char** argv )
     marker_pub.publish(right_lane1);
     marker_pub.publish(right_lane2);
     marker_pub.publish(right_lane3);
+    marker_pub.publish(moving_cube);
+
       r.sleep();
       f+= 0.04;
   }
