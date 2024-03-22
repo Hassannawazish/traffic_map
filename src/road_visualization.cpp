@@ -4,8 +4,6 @@
 #include "map_processor.h"
 #include "types.h"
 #include <random>
-#include "cuda_runtime.h"
-#include "device_launch_parameters.h"
 
 extern const int procs;
 
