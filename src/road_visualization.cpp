@@ -5,9 +5,6 @@
 #include <fstream>
 #include <random>
 
-#include "cuda_runtime.h"
-#include "device_launch_parameters.h"
-
 #include "map_processor.h"
 #include "types.h"
 
