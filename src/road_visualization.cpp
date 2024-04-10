@@ -38,19 +38,22 @@ int main(int argc, char** argv )
   std::vector< double> yr2 =  processed.get_lane(2)["y2"];
   std::vector< double> xr3 =  processed.get_lane(2)["x3"];
   std::vector< double> yr3 =  processed.get_lane(2)["y3"];
+  int t=0;
 
   while (ros::ok())
   {
-    visualization_msgs::Marker Ref_line, left_lane1, left_lane2, left_lane3, right_lane1, right_lane2, right_lane3;
+    visualization_msgs::Marker Ref_line, left_lane1, left_lane2, left_lane3, right_lane1, right_lane2, right_lane3, cube_marker;
     sensor_msgs::CameraInfo camera_info_msg;
-    camera_info_msg.header.stamp = ros::Time::now();
-    camera_info_msg.header.frame_id = "map";
+    cube_marker.header.stamp = camera_info_msg.header.stamp = ros::Time::now();
+    cube_marker.header.frame_id = camera_info_msg.header.frame_id = "map";
 
     right_lane3.header.frame_id = right_lane2.header.frame_id = right_lane1.header.frame_id = left_lane3.header.frame_id = left_lane2.header.frame_id = left_lane1.header.frame_id = Ref_line.header.frame_id= "map";  
     right_lane3.header.stamp = right_lane2.header.stamp = right_lane1.header.stamp = left_lane3.header.stamp = left_lane2.header.stamp = left_lane1.header.stamp = Ref_line.header.stamp = ros::Time::now();   
-    right_lane3.ns = right_lane2.ns = right_lane1.ns = left_lane3.ns = left_lane2.ns = left_lane1.ns = Ref_line.ns="road_visualization";  
+    cube_marker.ns = right_lane3.ns = right_lane2.ns = right_lane1.ns = left_lane3.ns = left_lane2.ns = left_lane1.ns = Ref_line.ns="road_visualization";  
     Ref_line.type = visualization_msgs::Marker::LINE_STRIP;
-    right_lane3.type = right_lane2.type = right_lane1.type = left_lane3.type = left_lane2.type = left_lane1.type = visualization_msgs::Marker::LINE_STRIP; 
+    right_lane3.type = right_lane2.type = right_lane1.type = left_lane3.type = left_lane2.type = left_lane1.type = visualization_msgs::Marker::LINE_STRIP;
+    cube_marker.type = visualization_msgs::Marker::MESH_RESOURCE;
+    cube_marker.action = visualization_msgs::Marker::ADD; 
     right_lane3.action = right_lane2.action = right_lane1.action = left_lane3.action = left_lane2.action = left_lane1.action = Ref_line.action = visualization_msgs::Marker::ADD;
     Ref_line.id = 0;
     left_lane1.id = 1;
@@ -59,6 +62,7 @@ int main(int argc, char** argv )
     right_lane1.id = 4;
     right_lane2.id = 5;
     right_lane3.id = 6;
+    cube_marker.id = 7;
     Ref_line.pose.orientation.w = 2.0;//stod(Config::singleton().center_lane_dimentions_rm["width"]);
     //std::map <std::string, std::string> rm_data = stod(Config::singleton().left_lane_dimentions_rm[3]);
     //right_lane1.pose.orientation.w = rm_data["width"];
@@ -102,6 +106,26 @@ int main(int argc, char** argv )
     camera_info_msg.P[3] = 4808.0;  // Set the initial x position
     camera_info_msg.P[7] = 3099.0;  // Set the initial y position
     camera_info_msg.P[11] = 0.0; // Set the initial z position
+
+    // Eigen::Quaterniond rotation_quaternion(Eigen::AngleAxisd(M_PI, Eigen::Vector3d::UnitX())); // Example: Rotate around X-axis by pi radians
+    cube_marker.mesh_resource = "file:///home/maanz/Downloads/Audi_Q7_2009.stl";
+    cube_marker.mesh_use_embedded_materials = true;
+    cube_marker.pose.position.x = x1[t];
+    cube_marker.pose.position.y = y1[t];
+    cube_marker.pose.position.z = 0.0;
+    cube_marker.scale.x = 1.0;
+    cube_marker.scale.y = 1.0;
+    cube_marker.scale.z = 1.0;
+
+    // cube_marker.color.r = 1.0;
+    // cube_marker.color.g = 0.0;
+    // cube_marker.color.b = 0.0;
+    // cube_marker.color.a = 1.0;
+
+    cube_marker.pose.orientation.x = 0.0;
+    cube_marker.pose.orientation.y = 0.0;
+    cube_marker.pose.orientation.z = 0.0;
+    cube_marker.pose.orientation.w = 1.0;
 
     for (int i = 0; i < Config::singleton().planeview_data.size(); ++i)
       {
@@ -163,7 +187,12 @@ int main(int argc, char** argv )
     marker_pub.publish(right_lane1);
     marker_pub.publish(right_lane2);
     marker_pub.publish(right_lane3);
-      r.sleep();
-      f+= 0.04;
+    marker_pub.publish(cube_marker);
+    
+    if (t < x1.size())
+      t++;
+    
+    r.sleep();
+    f+= 0.04;
   }
 }
