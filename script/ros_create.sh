@@ -46,6 +46,8 @@ cp parser.cpp ${C_CODE_PATH}
 cp map_processor.h ${C_CODE_PATH}
 cp map_processor.cpp ${C_CODE_PATH}
 cp types.h ${C_CODE_PATH}
+cp lane.hpp ${C_CODE_PATH}
+cp lane.cpp ${C_CODE_PATH}
 cd ../..
 pwd
 cd catkin_ws
@@ -57,4 +59,3 @@ export FILEPATH
 echo $FILEPATH
 
 roscore & ./src/traffic_xodr/build/road_visualization -fopenmp & rviz rviz
-

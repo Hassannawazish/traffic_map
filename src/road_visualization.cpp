@@ -5,6 +5,7 @@
 #include <fstream>
 #include "map_processor.h"
 #include "types.h"
+#include "lane.hpp"
 #include <random>
 
 extern const int procs;
@@ -40,70 +41,22 @@ int main(int argc, char** argv )
   std::vector< double> yr3 =  processed.get_lane(2)["y3"];
   int t=0;
 
-  visualization_msgs::Marker Ref_line, left_lane1, left_lane2, left_lane3, right_lane1, right_lane2, right_lane3;
-  double marker_lifetime = 0;
-  Ref_line.lifetime = ros::Duration(marker_lifetime);
-  left_lane1.lifetime = ros::Duration(marker_lifetime);
-  left_lane2.lifetime = ros::Duration(marker_lifetime);
-  left_lane3.lifetime = ros::Duration(marker_lifetime);
-  right_lane1.lifetime = ros::Duration(marker_lifetime);
-  right_lane2.lifetime = ros::Duration(marker_lifetime);
-  right_lane3.lifetime = ros::Duration(marker_lifetime);
+  MapLanes Ref_line, left_lane1, left_lane2, left_lane3, right_lane1, right_lane2, right_lane3;
+  Ref_line.set_lane_id(0);
+  left_lane1.set_lane_id(1);
+  left_lane2.set_lane_id(2);
+  left_lane3.set_lane_id(3);
+  right_lane1.set_lane_id(4);
+  right_lane2.set_lane_id(5);
+  right_lane3.set_lane_id(6);
+  Ref_line.set_color(1.0, 0.0, 0.0);
+  left_lane1.set_color(0.0, 1.0, 0.0);
+  left_lane2.set_color(0.0, 1.0, 0.0);
+  left_lane3.set_color(0.0, 0.0, 1.0);
+  right_lane1.set_color(0.0, 1.0, 0.0);
+  right_lane2.set_color(0.0, 1.0, 0.0);
+  right_lane3.set_color(0.0, 0.0, 1.0);
 
-  right_lane3.header.frame_id = right_lane2.header.frame_id = right_lane1.header.frame_id = left_lane3.header.frame_id = left_lane2.header.frame_id = left_lane1.header.frame_id = Ref_line.header.frame_id= "map"; 
-  right_lane3.header.stamp = right_lane2.header.stamp = right_lane1.header.stamp = left_lane3.header.stamp = left_lane2.header.stamp = left_lane1.header.stamp = Ref_line.header.stamp = ros::Time::now(); 
-  right_lane3.ns = right_lane2.ns = right_lane1.ns = left_lane3.ns = left_lane2.ns = left_lane1.ns = Ref_line.ns="road_visualization";
-
-  Ref_line.type = visualization_msgs::Marker::LINE_STRIP;
-  right_lane3.type = right_lane2.type = right_lane1.type = left_lane3.type = left_lane2.type = left_lane1.type = visualization_msgs::Marker::LINE_STRIP;
-
-  right_lane3.action = right_lane2.action = right_lane1.action = left_lane3.action = left_lane2.action = left_lane1.action = Ref_line.action = visualization_msgs::Marker::ADD;
-  Ref_line.id = 0;
-  left_lane1.id = 1;
-  left_lane2.id = 2;
-  left_lane3.id = 3;
-  right_lane1.id = 4;
-  right_lane2.id = 5;
-  right_lane3.id = 6;
-
-  Ref_line.pose.orientation.w = 2.0;//stod(Config::singleton().center_lane_dimentions_rm["width"]);
-  //std::map <std::string, std::string> rm_data = stod(Config::singleton().left_lane_dimentions_rm[3]);
-  //right_lane1.pose.orientation.w = rm_data["width"];
-  left_lane3.pose.orientation.w = left_lane2.pose.orientation.w = left_lane1.pose.orientation.w = 1.0;
-  right_lane3.pose.orientation.w = right_lane2.pose.orientation.w = right_lane1.pose.orientation.w = 1.0;
-  right_lane3.scale.x  = right_lane2.scale.x  = right_lane1.scale.x  = left_lane3.scale.x  = left_lane2.scale.x  = left_lane1.scale.x  = Ref_line.scale.x = 0.1;
-  right_lane3.scale.y = right_lane2.scale.y = right_lane1.scale.y  = left_lane3.scale.y = left_lane2.scale.y = left_lane1.scale.y  = Ref_line.scale.y = 0.1;
-  right_lane3.scale.z = right_lane2.scale.z = right_lane1.scale.z = left_lane3.scale.z = left_lane2.scale.z = left_lane1.scale.z = Ref_line.scale.z = 0;
-  
-  right_lane3.color.a = right_lane2.color.a = right_lane1.color.a = left_lane3.color.a = left_lane2.color.a = left_lane1.color.a = Ref_line.color.a = 1.0;
-
-  Ref_line.color.r = 1.0;
-  Ref_line.color.g = 0.0;
-  Ref_line.color.b = 0.0;
-
-  left_lane1.color.r = 0.0;
-  left_lane1.color.g = 1.0;
-  left_lane1.color.b = 0.0;
-
-  left_lane2.color.r = 0.0;
-  left_lane2.color.g = 1.0;
-  left_lane2.color.b = 0.0;
-
-  left_lane3.color.r = 0.0;
-  left_lane3.color.g = 0.0;
-  left_lane3.color.b = 1.0;
-
-  right_lane1.color.r = 0.0;
-  right_lane1.color.g = 1.0;
-  right_lane1.color.b = 0.0;
-
-  right_lane2.color.r = 0.0;
-  right_lane2.color.g = 1.0;
-  right_lane2.color.b = 0.0;
-
-  right_lane3.color.r = 0.0;
-  right_lane3.color.g = 0.0;
-  right_lane3.color.b = 1.0;
 
   for (int i = 0; i < Config::singleton().planeview_data.size(); ++i)
   {
@@ -113,7 +66,7 @@ int main(int argc, char** argv )
       p.x = planeview_dat["x"];
       p.y = planeview_dat["y"];
       p.z = 0.0;
-      Ref_line.points.push_back(p);
+      Ref_line.pushback(p);
       planeview_dat.clear();
   }
 
@@ -132,9 +85,9 @@ int main(int argc, char** argv )
     pl3.y=y3[i];
     pl3.z=0.0;
 
-    left_lane1.points.push_back(pl1);
-    left_lane2.points.push_back(pl2);
-    left_lane3.points.push_back(pl3);
+    left_lane1.pushback(pl1);
+    left_lane2.pushback(pl2);
+    left_lane3.pushback(pl3);
     }
   }
 
@@ -153,19 +106,19 @@ int main(int argc, char** argv )
     pr3.y=yr3[i];
     pr3.z=0.0;
 
-    right_lane1.points.push_back(pr1);
-    right_lane2.points.push_back(pr2);
-    right_lane3.points.push_back(pr3);
+    right_lane1.pushback(pr1);
+    right_lane2.pushback(pr2);
+    right_lane3.pushback(pr3);
     }
   }
 
-  marker_pub.publish(Ref_line);
-  marker_pub.publish(left_lane1);
-  marker_pub.publish(left_lane2);
-  marker_pub.publish(left_lane3);
-  marker_pub.publish(right_lane1);
-  marker_pub.publish(right_lane2);
-  marker_pub.publish(right_lane3);
+  marker_pub.publish(Ref_line.get_marker());
+  marker_pub.publish(left_lane1.get_marker());
+  marker_pub.publish(left_lane2.get_marker());
+  marker_pub.publish(left_lane3.get_marker());
+  marker_pub.publish(right_lane1.get_marker());
+  marker_pub.publish(right_lane2.get_marker());
+  marker_pub.publish(right_lane3.get_marker());
 
   while (ros::ok())
   {

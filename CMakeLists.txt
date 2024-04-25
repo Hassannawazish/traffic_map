@@ -30,7 +30,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(road_visualization src/road_visualization.cpp src/parser.hpp src/parser.cpp src/map_processor.h src/map_processor.cpp)
+add_executable(road_visualization src/road_visualization.cpp src/lane.hpp src/lane.cpp)
 
  target_link_libraries(road_visualization parser
    ${catkin_LIBRARIES}
