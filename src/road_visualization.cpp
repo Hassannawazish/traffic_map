@@ -41,14 +41,7 @@ int main(int argc, char** argv )
   std::vector< double> yr3 =  processed.get_lane(2)["y3"];
   int t=0;
 
-  MapLanes Ref_line, left_lane1, left_lane2, left_lane3, right_lane1, right_lane2, right_lane3;
-  Ref_line.set_lane_id(0);
-  left_lane1.set_lane_id(1);
-  left_lane2.set_lane_id(2);
-  left_lane3.set_lane_id(3);
-  right_lane1.set_lane_id(4);
-  right_lane2.set_lane_id(5);
-  right_lane3.set_lane_id(6);
+  MapLane Ref_line, left_lane1, left_lane2, left_lane3, right_lane1, right_lane2, right_lane3;
   Ref_line.set_color(1.0, 0.0, 0.0);
   left_lane1.set_color(0.0, 1.0, 0.0);
   left_lane2.set_color(0.0, 1.0, 0.0);
