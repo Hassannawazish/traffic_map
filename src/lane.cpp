@@ -6,6 +6,7 @@ MapLane::MapLane() {
     set_base_attributes();
     set_visual_attributes();
     set_lane_id(lane_id);
+    set_color();
     lane_id++;
 }
 
@@ -25,11 +26,11 @@ void MapLane::set_visual_attributes(){
     line.scale.z = 0;
 }
 
-void MapLane::set_color(double r, double g, double b){
+void MapLane::set_color(){
     line.color.a = 1.0;
-    line.color.r = r;
-    line.color.g = g;
-    line.color.b = b;
+    line.color.r = 1.0;
+    line.color.g = 0.0;
+    line.color.b = 0.0;
 }
 
 void MapLane::set_lane_id(int id){
@@ -42,4 +43,26 @@ visualization_msgs::Marker MapLane::get_marker(){
 
 void MapLane::pushback(geometry_msgs::Point p){
     line.points.push_back(p);
+}
+
+SideLane::SideLane(){
+    set_color();
+}
+
+void SideLane::set_color(){
+    line.color.a = 1.0;
+    line.color.r = 0.0;
+    line.color.g = 1.0;
+    line.color.b = 0.0;
+}
+
+BorderLane::BorderLane(){
+    set_color();
+}
+
+void BorderLane::set_color(){
+    line.color.a = 1.0;
+    line.color.r = 0.0;
+    line.color.g = 0.0;
+    line.color.b = 1.0;
 }
