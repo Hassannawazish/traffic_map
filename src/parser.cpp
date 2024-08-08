@@ -33,8 +33,9 @@ Config::Config() {
      }
 }
 
+
 void Config::parse() {
-    std::chrono::time_point<std::chrono::system_clock> start, end;
+    auto start = std::chrono::system_clock::now();
     pugi::xml_document doc;
     const char* env_filename= getenv("FILEPATH");
     #if defined(WIN32)
@@ -45,147 +46,47 @@ void Config::parse() {
     config.num_of_lanes = 0;
 
     pugi::xml_node root_node = doc.child("OpenDRIVE");
-    pugi::xml_node parent_node= root_node.first_child().next_sibling();
+    pugi::xml_node parent_node = root_node.child("road");
     for (pugi::xml_attribute road_attr = parent_node.first_attribute(); road_attr; road_attr = road_attr.next_attribute()) {
-        std::string road_attr_name = road_attr.name();
-        std::string road_attr_val = road_attr.value();
-        config.road_specs.insert(std::pair<std::string, std::string>(road_attr_name, road_attr_val));
+        config.road_specs.emplace(road_attr.name(), road_attr.value());
     }
+
     config.road_length = stod(config.road_specs.at("length"));
-    
-    pugi::xml_node child_node = parent_node.first_child();
     for (pugi::xml_node child = parent_node.first_child(); child; child = child.next_sibling()) {
-        std::string map_components = child.name();
-        if (!map_components.compare("planView")) {
-            start = std::chrono::system_clock::now();
+        std::string map_component = child.name();
+        if (map_component == "planView") {
             for (pugi::xml_node grand_child = child.first_child(); grand_child; grand_child = grand_child.next_sibling()) {
                 config.num_of_geometeries++;
                 std::map<std::string, double> planview_parameters;
                 for (pugi::xml_attribute attr = grand_child.first_attribute(); attr; attr = attr.next_attribute()) {
-                    std::string names = attr.name();
-                    std::string values = attr.value();
-                    planview_parameters.insert(std::pair<std::string, double>(names, stod(values)));
+                    planview_parameters.emplace(attr.name(), std::stod(attr.value()));
                 }
                 config.planeview_data.push_back(planview_parameters);
-                planview_parameters.clear();
             }
-            end = std::chrono::system_clock::now();
-        }
-        else if(!map_components.compare("lanes")) {
+        } else if (map_component == "lanes") {
             for (pugi::xml_node grand_child = child.first_child(); grand_child; grand_child = grand_child.next_sibling()) {
-                for (pugi::xml_node grand_grand_child = grand_child.first_child(); grand_grand_child; grand_grand_child = grand_grand_child.next_sibling()) {
-                    std::string lane_position=grand_grand_child.name();
-                    if(!lane_position.compare("left")) {
-                        int id_info = 4;
-                        for (pugi::xml_node grand_grand_grand_child = grand_grand_child.first_child(); grand_grand_grand_child; grand_grand_grand_child = grand_grand_grand_child.next_sibling()) {
-                            config.num_of_lanes++;
-                            for (pugi::xml_attribute lane_attr = grand_grand_grand_child.first_attribute(); lane_attr; lane_attr = lane_attr.next_attribute()) {
-                                std::string names = lane_attr.name();
-                                std::string values = lane_attr.value();
-                                std::map<std::string, std::string> left_lane_parameters;
-                                left_lane_parameters.insert(std::pair<std::string, std::string>(names, values));
-                                config.left_lane_attributes.push_back(left_lane_parameters); 
-                            }
-                            std::vector<std::map<std::string, double>> width_tages;
-                            for (pugi::xml_node grand_4_child = grand_grand_grand_child.first_child(); grand_4_child; grand_4_child = grand_4_child.next_sibling()){
-                                std::string road_dims = grand_4_child.name();
-                                if(!road_dims.compare("width")) {
-                                    std::map<std::string, double> left_lane_dims;
-                                    for (pugi::xml_attribute width_attr = grand_4_child.first_attribute(); width_attr; width_attr = width_attr.next_attribute()) {
-                                        std::string names = width_attr.name();
-                                        std::string values = width_attr.value();
-                                        left_lane_dims.insert(std::pair<std::string, double>(names, stod(values)));
-                                    }
-                                    width_tages.push_back(left_lane_dims);
-                                    left_lane_dims.clear();
-                                }
-                                if(!road_dims.compare("roadMark")) {
-                                    std::map<std::string, std::string> left_lane_dims;
-                                    for (pugi::xml_attribute roadmark_attr = grand_4_child.first_attribute(); roadmark_attr; roadmark_attr = roadmark_attr.next_attribute()) {
-                                        std::string names = roadmark_attr.name();
-                                        std::string values = roadmark_attr.value();
-                                        left_lane_dims.insert(std::pair<std::string, std::string>(names, values));
-                                    }
-                                    config.left_lane_dimentions_rm.push_back(left_lane_dims);
-                                    left_lane_dims.clear();
-                                }
-                            }
-                            config.left_lanes_frames.insert(std::pair<int, std::vector<std::map<std::string, double>>>(id_info, width_tages));
-                            id_info--;
-                        }
+                for (pugi::xml_node lane_section = grand_child.first_child(); lane_section; lane_section = lane_section.next_sibling()) {
+                    std::string lane_position = lane_section.name();
+                    if (lane_position == "left") {
+                        config.parseLaneSection(lane_section, config.left_lane_attributes, config.left_lane_dimentions_rm, config.left_lanes_frames, 4);
                         config.number_of_left_lanes = config.left_lanes_frames.size();
-                    }
-                    if(!lane_position.compare("center")) {
-                        for (pugi::xml_node grand_grand_grand_child = grand_grand_child.first_child(); grand_grand_grand_child; grand_grand_grand_child = grand_grand_grand_child.next_sibling()) {
-                            config.num_of_lanes++;
-                            for (pugi::xml_attribute lane_attr = grand_grand_grand_child.first_attribute(); lane_attr; lane_attr = lane_attr.next_attribute()) {
-                                std::string names = lane_attr.name();
-                                std::string values = lane_attr.value();
-                                std::map<std::string, std::string> center_lane_parameters;
-                                center_lane_parameters.insert(std::pair<std::string, std::string>(names, values));
-                                config.center_lane_attributes.push_back(center_lane_parameters); 
-                            }
-                            for (pugi::xml_node grand_4_child = grand_grand_grand_child.first_child(); grand_4_child; grand_4_child = grand_4_child.next_sibling()){
-                                std::string road_dims = grand_4_child.name();
-                                if(!road_dims.compare("roadMark")) {
-                                    for (pugi::xml_attribute roadmark_attr = grand_4_child.first_attribute(); roadmark_attr; roadmark_attr = roadmark_attr.next_attribute()) {
-                                        std::string names = roadmark_attr.name();
-                                        std::string values = roadmark_attr.value();
-                                        config.center_lane_dimentions_rm.insert(std::pair<std::string, std::string>(names, values));
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if(!lane_position.compare("right")) {
-                        int id_info = 1;
-                        for (pugi::xml_node grand_grand_grand_child = grand_grand_child.first_child(); grand_grand_grand_child; grand_grand_grand_child = grand_grand_grand_child.next_sibling()) {
-                            config.num_of_lanes++;
-                            for (pugi::xml_attribute lane_attr = grand_grand_grand_child.first_attribute(); lane_attr; lane_attr = lane_attr.next_attribute()) {
-                                std::string names = lane_attr.name();
-                                std::string values = lane_attr.value();
-                                std::map<std::string, std::string> right_lane_parameters;
-                                right_lane_parameters.insert(std::pair<std::string, std::string>(names, values));
-                                config.right_lane_attributes.push_back(right_lane_parameters); 
-                            }
-                            std::vector<std::map<std::string, double>> width_tages;
-                            for (pugi::xml_node grand_4_child = grand_grand_grand_child.first_child(); grand_4_child; grand_4_child = grand_4_child.next_sibling()){
-                                std::string road_dims = grand_4_child.name();
-                                if(!road_dims.compare("width")) {
-                                    std::map<std::string, double> right_lane_dims;
-                                    for (pugi::xml_attribute width_attr = grand_4_child.first_attribute(); width_attr; width_attr = width_attr.next_attribute()) {
-                                        std::string names = width_attr.name();
-                                        std::string values = width_attr.value();
-                                        right_lane_dims.insert(std::pair<std::string, double>(names, stod(values)));
-                                    }
-                                    width_tages.push_back(right_lane_dims);
-                                    right_lane_dims.clear();
-                                }
-                                if(!road_dims.compare("roadMark")) {
-                                    std::map<std::string, std::string> right_lane_dims;
-                                    for (pugi::xml_attribute roadmark_attr = grand_4_child.first_attribute(); roadmark_attr; roadmark_attr = roadmark_attr.next_attribute()) {
-                                        std::string names = roadmark_attr.name();
-                                        std::string values = roadmark_attr.value();
-                                        right_lane_dims.insert(std::pair<std::string, std::string>(names, values));
-                                    }
-                                    config.right_lane_dimentions_rm.push_back(right_lane_dims);
-                                    right_lane_dims.clear();
-                                }
-                            }
-                            config.right_lanes_frames.insert(std::pair<int, std::vector<std::map<std::string, double>>>(id_info, width_tages));
-                            id_info++;
-                        }
+                    // } else if (lane_position == "center") {
+                    //     config.parseLaneSection(lane_section, config.center_lane_attributes, config.center_lane_dimentions_rm);
+                    } else if (lane_position == "right") {
+                        config.parseLaneSection(lane_section, config.right_lane_attributes, config.right_lane_dimentions_rm, config.right_lanes_frames, 1);
                         config.number_of_right_lanes = config.right_lanes_frames.size();
                     }
                 }
             }
         }
     }
+    auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start;
     std::time_t end_time = std::chrono::system_clock::to_time_t(end);
 
     std::cout << "Computation time of the parser at " << std::ctime(&end_time) << "Elapsed time: " << elapsed_seconds.count() << "s\n";
 }
+
 
 void Config::parseLaneSection(pugi::xml_node& lane_section, 
                               std::vector<std::map<std::string, std::string>>& lane_attributes,
@@ -221,6 +122,30 @@ void Config::parseLaneSection(pugi::xml_node& lane_section,
         start_id--;
     }
 }
+
+
+// void Config::parseLaneSection(pugi::xml_node& lane_section, 
+//                               std::vector<std::map<std::string, std::string>>& lane_attributes,
+//                               std::map<std::string, std::string>& lane_dimensions_rm) {
+//     for (pugi::xml_node lane = lane_section.first_child(); lane; lane = lane.next_sibling()) {
+//         config.num_of_lanes++;
+//         std::map<std::string, std::string> attributes;
+//         for (pugi::xml_attribute attr = lane.first_attribute(); attr; attr = attr.next_attribute()) {
+//             attributes.emplace(attr.name(), attr.value());
+//         }
+//         lane_attributes.push_back(attributes);
+
+//         for (pugi::xml_node lane_feature = lane.first_child(); lane_feature; lane_feature = lane_feature.next_sibling()) {
+//             std::string feature_name = lane_feature.name();
+//             if (feature_name == "roadMark") {
+//                 for (pugi::xml_attribute attr = lane_feature.first_attribute(); attr; attr = attr.next_attribute()) {
+//                     lane_dimensions_rm.emplace(attr.name(), attr.value());
+//                 }
+//             }
+//         }
+//     }
+// }
+
 
 Config& Config::singleton()
 {
