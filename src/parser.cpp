@@ -4,33 +4,24 @@
 Config& config = Config::singleton();
 
 Config::Config() {
-    pugi::xml_document *doc;
-    doc = new pugi::xml_document;
-    const char* env_filename= getenv("FILEPATH");
+    const char* env_filename = getenv("FILEPATH");
+    if (!env_filename) {
+        std::cerr << "FILEPATH environment variable not set." << std::endl;
+        throw std::runtime_error("FILEPATH environment variable not set.");
+    }
+
+    auto doc = std::make_unique<pugi::xml_document>();
+
     try {
-        #if defined(WIN32)
-        if(doc->load_file(env_filename)){
-            std::cout<<"File status"<<"\t"<<"Loaded XODR"<<std::endl;
-            delete doc;
+        if (doc->load_file(env_filename)) {
+            std::cout << "File status\tLoaded XODR" << std::endl;
+        } else {
+            throw std::runtime_error("Failed to load XML file.");
         }
-        else{ 
-            delete doc;
-            throw 505;
-        }
-        #else
-        if(doc->load_file(env_filename)){
-                std::cout<<"File status"<<"\t"<<"Loaded XODR"<<std::endl;
-                delete doc;
-            }
-            else{ 
-                delete doc;
-                throw 505;
-            }
-        #endif
-    } 
-    catch (...) {
-     std::cerr<<"File status"<<"\t"<<"Loading Failed for XODR"<<std::endl;
-     }
+    } catch (const std::exception& e) {
+        std::cerr << "File status\tLoading Failed for XODR: " << e.what() << std::endl;
+        throw;
+    }
 }
 
 
@@ -68,12 +59,12 @@ void Config::parse() {
                 for (pugi::xml_node lane_section = grand_child.first_child(); lane_section; lane_section = lane_section.next_sibling()) {
                     std::string lane_position = lane_section.name();
                     if (lane_position == "left") {
-                        config.parseLaneSection(lane_section, config.left_lane_attributes, config.left_lane_dimentions_rm, config.left_lanes_frames, 4);
+                        config.parseLaneSection(lane_section, config.left_lane_attributes, config.left_lane_dimensions_rm, config.left_lanes_frames, 4);
                         config.number_of_left_lanes = config.left_lanes_frames.size();
                     } else if (lane_position == "center") {
-                        config.parseLaneSection(lane_section, config.center_lane_attributes, config.center_lane_dimentions_rm);
+                        config.parseLaneSection(lane_section, config.center_lane_attributes, config.center_lane_dimensions_rm);
                     } else if (lane_position == "right") {
-                        config.parseLaneSection(lane_section, config.right_lane_attributes, config.right_lane_dimentions_rm, config.right_lanes_frames, 1);
+                        config.parseLaneSection(lane_section, config.right_lane_attributes, config.right_lane_dimensions_rm, config.right_lanes_frames, 1);
                         config.number_of_right_lanes = config.right_lanes_frames.size();
                     }
                 }
