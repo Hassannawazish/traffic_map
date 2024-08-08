@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.20.0)
 project(using_markers)
 
 add_compile_options(-std=c++11)
