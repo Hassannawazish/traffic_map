@@ -29,11 +29,7 @@ void Config::parse() {
     auto start = std::chrono::system_clock::now();
     pugi::xml_document doc;
     const char* env_filename= getenv("FILEPATH");
-    #if defined(WIN32)
-        doc.load_file("env_filename");
-    #else
-        doc.load_file(env_filename);
-    #endif
+    doc.load_file(env_filename);
     config.num_of_lanes = 0;
 
     pugi::xml_node root_node = doc.child("OpenDRIVE");
@@ -119,7 +115,6 @@ void Config::parseLaneSection(pugi::xml_node& lane_section,
                               std::deque<std::map<std::string, std::string>>& lane_attributes,
                               std::map<std::string, std::string>& lane_dimensions_rm) {
     for (pugi::xml_node lane = lane_section.first_child(); lane; lane = lane.next_sibling()) {
-        config.num_of_lanes++;
         std::map<std::string, std::string> attributes;
         for (pugi::xml_attribute attr = lane.first_attribute(); attr; attr = attr.next_attribute()) {
             attributes.emplace(attr.name(), attr.value());
