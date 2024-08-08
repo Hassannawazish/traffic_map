@@ -187,6 +187,41 @@ void Config::parse() {
     std::cout << "Computation time of the parser at " << std::ctime(&end_time) << "Elapsed time: " << elapsed_seconds.count() << "s\n";
 }
 
+void Config::parseLaneSection(pugi::xml_node& lane_section, 
+                              std::vector<std::map<std::string, std::string>>& lane_attributes,
+                              std::vector<std::map<std::string, std::string>>& lane_dimensions_rm,
+                              std::map<int, std::vector<std::map<std::string, double>>>& lanes_frames, 
+                              int start_id) {
+    for (pugi::xml_node lane = lane_section.first_child(); lane; lane = lane.next_sibling()) {
+        config.num_of_lanes++;
+        std::map<std::string, std::string> attributes;
+        for (pugi::xml_attribute attr = lane.first_attribute(); attr; attr = attr.next_attribute()) {
+            attributes.emplace(attr.name(), attr.value());
+        }
+        lane_attributes.push_back(attributes);
+
+        std::vector<std::map<std::string, double>> width_tags;
+        for (pugi::xml_node lane_feature = lane.first_child(); lane_feature; lane_feature = lane_feature.next_sibling()) {
+            std::string feature_name = lane_feature.name();
+            if (feature_name == "width") {
+                std::map<std::string, double> dimensions;
+                for (pugi::xml_attribute attr = lane_feature.first_attribute(); attr; attr = attr.next_attribute()) {
+                    dimensions.emplace(attr.name(), std::stod(attr.value()));
+                }
+                width_tags.push_back(dimensions);
+            } else if (feature_name == "roadMark") {
+                std::map<std::string, std::string> dimensions;
+                for (pugi::xml_attribute attr = lane_feature.first_attribute(); attr; attr = attr.next_attribute()) {
+                    dimensions.emplace(attr.name(), attr.value());
+                }
+                lane_dimensions_rm.push_back(dimensions);
+            }
+        }
+        lanes_frames.emplace(start_id, width_tags);
+        start_id--;
+    }
+}
+
 Config& Config::singleton()
 {
   static Config instance;

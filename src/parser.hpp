@@ -26,7 +26,7 @@ public:
 
   // Vars ...
   double road_length;
-	int num_of_lanes;
+    int num_of_lanes;
   int num_of_geometeries;
   std::map <std::string, std::string> road_specs;
   std::vector <std::map<std::string, double> > planeview_data;
@@ -43,5 +43,15 @@ public:
 //////////////////////Right Lane///////////////////////////////////////////
   std::vector <std::map<std::string, std::string> > right_lane_attributes, right_lane_dimentions_rm;
   std::map<int, std::vector <std::map <std::string, double> > > right_lanes_frames;
+
+void parseLaneSection(pugi::xml_node& lane_section, 
+                      std::vector<std::map<std::string, std::string>>& lane_attributes,
+                      std::vector<std::map<std::string, std::string>>& lane_dimensions_rm,
+                      std::map<int, std::vector<std::map<std::string, double>>>& lanes_frames, 
+                      int start_id);
+                  
+// void parseLaneSection(pugi::xml_node& lane_section, 
+//                               std::vector<std::map<std::string, std::string>>& lane_attributes,
+//                               std::map<std::string, std::string>& lane_dimensions_rm);
 
 };
