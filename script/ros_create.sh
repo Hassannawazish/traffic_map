@@ -16,7 +16,7 @@ if [ -d "/usr/local/lib/cmake/pugixml" ]
 then
     echo "Directory Pugixml exists." 
 else
-    echo "Error: Directory Pugixml does not exists."
+    echo "Error: Directory Pugixml does not exist."
     echo "Installing PUGIXML"
     git clone https://github.com/zeux/pugixml.git
     cd pugixml
@@ -35,8 +35,7 @@ C_CODE_PATH=$PWD
 echo ${C_CODE_PATH}
 cd ../../..
 pwd
-cd ..
-cd traffic_map
+cd ../traffic_map
 cp CMakeLists.txt ${CMAKE_PATH}
 cd src
 cp bjb_sangjani_full.xodr ${C_CODE_PATH}
@@ -53,9 +52,17 @@ pwd
 cd catkin_ws
 source devel/setup.bash
 catkin_make
-rosmake traffic_xodr
+
 FILEPATH="${C_CODE_PATH}/bjb_sangjani_full.xodr" 
 export FILEPATH
 echo $FILEPATH
 
-roscore & ./src/traffic_xodr/build/road_visualization -fopenmp & rviz rviz
+# Check if roscore is already running
+if ! pgrep -x "roscore" > /dev/null
+then
+    roscore &
+else
+    echo "roscore is already running"
+fi
+
+./src/traffic_xodr/build/road_visualization -fopenmp & rviz rviz
