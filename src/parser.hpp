@@ -50,8 +50,8 @@ void parseLaneSection(pugi::xml_node& lane_section,
                       std::map<int, std::vector<std::map<std::string, double>>>& lanes_frames, 
                       int start_id);
                   
-// void parseLaneSection(pugi::xml_node& lane_section, 
-//                               std::vector<std::map<std::string, std::string>>& lane_attributes,
-//                               std::map<std::string, std::string>& lane_dimensions_rm);
+void parseLaneSection(pugi::xml_node& lane_section, 
+                              std::deque<std::map<std::string, std::string>>& lane_attributes,
+                              std::map<std::string, std::string>& lane_dimensions_rm);
 
 };

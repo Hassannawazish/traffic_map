@@ -70,8 +70,8 @@ void Config::parse() {
                     if (lane_position == "left") {
                         config.parseLaneSection(lane_section, config.left_lane_attributes, config.left_lane_dimentions_rm, config.left_lanes_frames, 4);
                         config.number_of_left_lanes = config.left_lanes_frames.size();
-                    // } else if (lane_position == "center") {
-                    //     config.parseLaneSection(lane_section, config.center_lane_attributes, config.center_lane_dimentions_rm);
+                    } else if (lane_position == "center") {
+                        config.parseLaneSection(lane_section, config.center_lane_attributes, config.center_lane_dimentions_rm);
                     } else if (lane_position == "right") {
                         config.parseLaneSection(lane_section, config.right_lane_attributes, config.right_lane_dimentions_rm, config.right_lanes_frames, 1);
                         config.number_of_right_lanes = config.right_lanes_frames.size();
@@ -124,27 +124,27 @@ void Config::parseLaneSection(pugi::xml_node& lane_section,
 }
 
 
-// void Config::parseLaneSection(pugi::xml_node& lane_section, 
-//                               std::vector<std::map<std::string, std::string>>& lane_attributes,
-//                               std::map<std::string, std::string>& lane_dimensions_rm) {
-//     for (pugi::xml_node lane = lane_section.first_child(); lane; lane = lane.next_sibling()) {
-//         config.num_of_lanes++;
-//         std::map<std::string, std::string> attributes;
-//         for (pugi::xml_attribute attr = lane.first_attribute(); attr; attr = attr.next_attribute()) {
-//             attributes.emplace(attr.name(), attr.value());
-//         }
-//         lane_attributes.push_back(attributes);
+void Config::parseLaneSection(pugi::xml_node& lane_section, 
+                              std::deque<std::map<std::string, std::string>>& lane_attributes,
+                              std::map<std::string, std::string>& lane_dimensions_rm) {
+    for (pugi::xml_node lane = lane_section.first_child(); lane; lane = lane.next_sibling()) {
+        config.num_of_lanes++;
+        std::map<std::string, std::string> attributes;
+        for (pugi::xml_attribute attr = lane.first_attribute(); attr; attr = attr.next_attribute()) {
+            attributes.emplace(attr.name(), attr.value());
+        }
+        lane_attributes.push_back(attributes);
 
-//         for (pugi::xml_node lane_feature = lane.first_child(); lane_feature; lane_feature = lane_feature.next_sibling()) {
-//             std::string feature_name = lane_feature.name();
-//             if (feature_name == "roadMark") {
-//                 for (pugi::xml_attribute attr = lane_feature.first_attribute(); attr; attr = attr.next_attribute()) {
-//                     lane_dimensions_rm.emplace(attr.name(), attr.value());
-//                 }
-//             }
-//         }
-//     }
-// }
+        for (pugi::xml_node lane_feature = lane.first_child(); lane_feature; lane_feature = lane_feature.next_sibling()) {
+            std::string feature_name = lane_feature.name();
+            if (feature_name == "roadMark") {
+                for (pugi::xml_attribute attr = lane_feature.first_attribute(); attr; attr = attr.next_attribute()) {
+                    lane_dimensions_rm.emplace(attr.name(), attr.value());
+                }
+            }
+        }
+    }
+}
 
 
 Config& Config::singleton()
