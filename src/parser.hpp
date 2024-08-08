@@ -7,6 +7,7 @@
 #include <map>
 #include <deque>
 #include <chrono>
+#include <memory>
 
 class Config
 {

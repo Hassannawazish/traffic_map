@@ -10,7 +10,7 @@ Config::Config() {
         throw std::runtime_error("FILEPATH environment variable not set.");
     }
 
-    auto doc = std::make_unique<pugi::xml_document>();
+    auto doc = std::make_shared<pugi::xml_document>();
 
     try {
         if (doc->load_file(env_filename)) {
