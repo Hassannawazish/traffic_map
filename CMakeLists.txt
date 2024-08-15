@@ -26,8 +26,17 @@ else()
     message("OpenMP Not Found...........................!")
 endif()
 
+find_package(Eigen3 REQUIRED)
+if(Eigen3_FOUND)
+    message("Eigen3 Found...........................!")
+else()
+    message("Eigen3 Not Found...........................!")
+endif()
+
 include_directories(
-  ${catkin_INCLUDE_DIRS}
+  ${catkin_INCLUDE_DIRS},
+  ${EIGEN3_INCLUDE_DIR}
+
 )
 
 add_executable(road_visualization src/road_visualization.cpp src/lane.hpp src/lane.cpp)

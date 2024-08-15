@@ -1,6 +1,7 @@
 #include <ros/ros.h>
 #include <visualization_msgs/Marker.h>
 #include <sensor_msgs/CameraInfo.h>
+#include <Eigen/Geometry>
 
 #include <fstream>
 #include "map_processor.h"
