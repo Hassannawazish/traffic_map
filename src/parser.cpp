@@ -4,33 +4,24 @@
 Config& config = Config::singleton();
 
 Config::Config() {
-    pugi::xml_document *doc;
-    doc = new pugi::xml_document;
-    const char* env_filename= getenv("FILEPATH");
+    const char* env_filename = getenv("FILEPATH");
+    if (!env_filename) {
+        std::cerr << "FILEPATH environment variable not set." << std::endl;
+        throw std::runtime_error("FILEPATH environment variable not set.");
+    }
+
+    auto doc = std::make_shared<pugi::xml_document>();
+
     try {
-        #if defined(WIN32)
-        if(doc->load_file(env_filename)){
-            std::cout<<"File status"<<"\t"<<"Loaded XODR"<<std::endl;
-            delete doc;
+        if (doc->load_file(env_filename)) {
+            std::cout << "File status\tLoaded XODR" << std::endl;
+        } else {
+            throw std::runtime_error("Failed to load XML file.");
         }
-        else{ 
-            delete doc;
-            throw 505;
-        }
-        #else
-        if(doc->load_file(env_filename)){
-                std::cout<<"File status"<<"\t"<<"Loaded XODR"<<std::endl;
-                delete doc;
-            }
-            else{ 
-                delete doc;
-                throw 505;
-            }
-        #endif
-    } 
-    catch (...) {
-     std::cerr<<"File status"<<"\t"<<"Loading Failed for XODR"<<std::endl;
-     }
+    } catch (const std::exception& e) {
+        std::cerr << "File status\tLoading Failed for XODR: " << e.what() << std::endl;
+        throw;
+    }
 }
 
 void Config::parse() {
