@@ -125,7 +125,17 @@ int main(int argc, char** argv )
     camera_info_msg.P[7] = 3099.0;  // Set the initial y position
     camera_info_msg.P[11] = 0.0; // Set the initial z position
 
-    // Eigen::Quaterniond rotation_quaternion(Eigen::AngleAxisd(M_PI, Eigen::Vector3d::UnitX())); // Example: Rotate around X-axis by pi radians
+    Eigen::Quaterniond lay_flat_rotation(Eigen::AngleAxisd(-M_PI / 2, Eigen::Vector3d::UnitX()));
+
+    // Step 2: Flip the vehicle by rotating 180 degrees around the Y-axis.
+    Eigen::Quaterniond flip_y_axis_rotation(Eigen::AngleAxisd(M_PI, Eigen::Vector3d::UnitY()));
+
+    // Step 3: Rotate the vehicle by -90 degrees around the Z-axis to correct the direction.
+    Eigen::Quaterniond correct_direction_rotation(Eigen::AngleAxisd(- (M_PI / 3), Eigen::Vector3d::UnitZ()));
+
+    // Combine all the rotations
+    Eigen::Quaterniond combined_rotation = correct_direction_rotation * flip_y_axis_rotation * lay_flat_rotation;
+
     cube_marker.mesh_resource = "file:///home/maanz/Downloads/Audi_Q7_2009.stl";
     cube_marker.mesh_use_embedded_materials = true;
     cube_marker.pose.position.x = x1[t];
@@ -140,10 +150,10 @@ int main(int argc, char** argv )
     // cube_marker.color.b = 0.0;
     // cube_marker.color.a = 1.0;
 
-    cube_marker.pose.orientation.x = 0.0;
-    cube_marker.pose.orientation.y = 0.0;
-    cube_marker.pose.orientation.z = 0.0;
-    cube_marker.pose.orientation.w = 1.0;
+    cube_marker.pose.orientation.x = combined_rotation.x();
+    cube_marker.pose.orientation.y = combined_rotation.y();
+    cube_marker.pose.orientation.z = combined_rotation.z();
+    cube_marker.pose.orientation.w = combined_rotation.w();
     
     camera_info_pub.publish(camera_info_msg);
 
