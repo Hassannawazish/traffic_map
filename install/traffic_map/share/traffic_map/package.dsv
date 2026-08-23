@@ -1,6 +1,9 @@
 source;share/traffic_map/hook/cmake_prefix_path.ps1
 source;share/traffic_map/hook/cmake_prefix_path.dsv
 source;share/traffic_map/hook/cmake_prefix_path.sh
+source;share/traffic_map/hook/ld_library_path_lib.ps1
+source;share/traffic_map/hook/ld_library_path_lib.dsv
+source;share/traffic_map/hook/ld_library_path_lib.sh
 source;share/traffic_map/local_setup.bash
 source;share/traffic_map/local_setup.dsv
 source;share/traffic_map/local_setup.ps1

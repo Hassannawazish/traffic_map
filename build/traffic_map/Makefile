@@ -223,6 +223,93 @@ road_visualization/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/road_visualization.dir/build.make CMakeFiles/road_visualization.dir/build
 .PHONY : road_visualization/fast
 
+#=============================================================================
+# Target rules for targets named generate_gazebo_assets
+
+# Build rule for target.
+generate_gazebo_assets: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 generate_gazebo_assets
+.PHONY : generate_gazebo_assets
+
+# fast build rule for target.
+generate_gazebo_assets/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/generate_gazebo_assets.dir/build.make CMakeFiles/generate_gazebo_assets.dir/build
+.PHONY : generate_gazebo_assets/fast
+
+#=============================================================================
+# Target rules for targets named convert_glb_to_obj
+
+# Build rule for target.
+convert_glb_to_obj: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 convert_glb_to_obj
+.PHONY : convert_glb_to_obj
+
+# fast build rule for target.
+convert_glb_to_obj/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/convert_glb_to_obj.dir/build.make CMakeFiles/convert_glb_to_obj.dir/build
+.PHONY : convert_glb_to_obj/fast
+
+#=============================================================================
+# Target rules for targets named traffic_world_plugin
+
+# Build rule for target.
+traffic_world_plugin: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 traffic_world_plugin
+.PHONY : traffic_world_plugin
+
+# fast build rule for target.
+traffic_world_plugin/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/traffic_world_plugin.dir/build.make CMakeFiles/traffic_world_plugin.dir/build
+.PHONY : traffic_world_plugin/fast
+
+src/convert_glb_to_obj.o: src/convert_glb_to_obj.cpp.o
+.PHONY : src/convert_glb_to_obj.o
+
+# target to build an object file
+src/convert_glb_to_obj.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/convert_glb_to_obj.dir/build.make CMakeFiles/convert_glb_to_obj.dir/src/convert_glb_to_obj.cpp.o
+.PHONY : src/convert_glb_to_obj.cpp.o
+
+src/convert_glb_to_obj.i: src/convert_glb_to_obj.cpp.i
+.PHONY : src/convert_glb_to_obj.i
+
+# target to preprocess a source file
+src/convert_glb_to_obj.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/convert_glb_to_obj.dir/build.make CMakeFiles/convert_glb_to_obj.dir/src/convert_glb_to_obj.cpp.i
+.PHONY : src/convert_glb_to_obj.cpp.i
+
+src/convert_glb_to_obj.s: src/convert_glb_to_obj.cpp.s
+.PHONY : src/convert_glb_to_obj.s
+
+# target to generate assembly for a file
+src/convert_glb_to_obj.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/convert_glb_to_obj.dir/build.make CMakeFiles/convert_glb_to_obj.dir/src/convert_glb_to_obj.cpp.s
+.PHONY : src/convert_glb_to_obj.cpp.s
+
+src/generate_gazebo_assets.o: src/generate_gazebo_assets.cpp.o
+.PHONY : src/generate_gazebo_assets.o
+
+# target to build an object file
+src/generate_gazebo_assets.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/generate_gazebo_assets.dir/build.make CMakeFiles/generate_gazebo_assets.dir/src/generate_gazebo_assets.cpp.o
+.PHONY : src/generate_gazebo_assets.cpp.o
+
+src/generate_gazebo_assets.i: src/generate_gazebo_assets.cpp.i
+.PHONY : src/generate_gazebo_assets.i
+
+# target to preprocess a source file
+src/generate_gazebo_assets.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/generate_gazebo_assets.dir/build.make CMakeFiles/generate_gazebo_assets.dir/src/generate_gazebo_assets.cpp.i
+.PHONY : src/generate_gazebo_assets.cpp.i
+
+src/generate_gazebo_assets.s: src/generate_gazebo_assets.cpp.s
+.PHONY : src/generate_gazebo_assets.s
+
+# target to generate assembly for a file
+src/generate_gazebo_assets.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/generate_gazebo_assets.dir/build.make CMakeFiles/generate_gazebo_assets.dir/src/generate_gazebo_assets.cpp.s
+.PHONY : src/generate_gazebo_assets.cpp.s
+
 src/lane.o: src/lane.cpp.o
 .PHONY : src/lane.o
 
@@ -319,6 +406,30 @@ src/road_visualization.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/road_visualization.dir/build.make CMakeFiles/road_visualization.dir/src/road_visualization.cpp.s
 .PHONY : src/road_visualization.cpp.s
 
+src/traffic_world_plugin.o: src/traffic_world_plugin.cpp.o
+.PHONY : src/traffic_world_plugin.o
+
+# target to build an object file
+src/traffic_world_plugin.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/traffic_world_plugin.dir/build.make CMakeFiles/traffic_world_plugin.dir/src/traffic_world_plugin.cpp.o
+.PHONY : src/traffic_world_plugin.cpp.o
+
+src/traffic_world_plugin.i: src/traffic_world_plugin.cpp.i
+.PHONY : src/traffic_world_plugin.i
+
+# target to preprocess a source file
+src/traffic_world_plugin.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/traffic_world_plugin.dir/build.make CMakeFiles/traffic_world_plugin.dir/src/traffic_world_plugin.cpp.i
+.PHONY : src/traffic_world_plugin.cpp.i
+
+src/traffic_world_plugin.s: src/traffic_world_plugin.cpp.s
+.PHONY : src/traffic_world_plugin.s
+
+# target to generate assembly for a file
+src/traffic_world_plugin.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/traffic_world_plugin.dir/build.make CMakeFiles/traffic_world_plugin.dir/src/traffic_world_plugin.cpp.s
+.PHONY : src/traffic_world_plugin.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -334,8 +445,17 @@ help:
 	@echo "... test"
 	@echo "... traffic_map_uninstall"
 	@echo "... uninstall"
+	@echo "... convert_glb_to_obj"
+	@echo "... generate_gazebo_assets"
 	@echo "... map_parser"
 	@echo "... road_visualization"
+	@echo "... traffic_world_plugin"
+	@echo "... src/convert_glb_to_obj.o"
+	@echo "... src/convert_glb_to_obj.i"
+	@echo "... src/convert_glb_to_obj.s"
+	@echo "... src/generate_gazebo_assets.o"
+	@echo "... src/generate_gazebo_assets.i"
+	@echo "... src/generate_gazebo_assets.s"
 	@echo "... src/lane.o"
 	@echo "... src/lane.i"
 	@echo "... src/lane.s"
@@ -348,6 +468,9 @@ help:
 	@echo "... src/road_visualization.o"
 	@echo "... src/road_visualization.i"
 	@echo "... src/road_visualization.s"
+	@echo "... src/traffic_world_plugin.o"
+	@echo "... src/traffic_world_plugin.i"
+	@echo "... src/traffic_world_plugin.s"
 .PHONY : help
 
 

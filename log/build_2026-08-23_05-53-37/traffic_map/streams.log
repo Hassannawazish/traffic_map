@@ -1,0 +1,119 @@
+[0.009s] Invoking command in '/home/hassan/Desktop/traffic_map/build/traffic_map': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hassan/Desktop/traffic_map/build/traffic_map -- -j12 -l12
+[0.038s] -- Found ament_cmake: 1.3.14 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.148s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[0.155s] -- Found geometry_msgs: 4.9.2 (/opt/ros/humble/share/geometry_msgs/cmake)
+[0.181s] -- Found rosidl_generator_c: 3.1.9 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[0.184s] -- Found rosidl_adapter: 3.1.9 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.190s] -- Found rosidl_generator_cpp: 3.1.9 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[0.201s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.213s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.248s] -- Found rclcpp: 16.0.19 (/opt/ros/humble/share/rclcpp/cmake)
+[0.273s] -- Found rmw_implementation_cmake: 6.1.3 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[0.274s] -- Found rmw_fastrtps_cpp: 6.2.10 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[0.362s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[0.403s] -- Found sensor_msgs: 4.9.2 (/opt/ros/humble/share/sensor_msgs/cmake)
+[0.421s] -- Found tf2_ros: 0.25.22 (/opt/ros/humble/share/tf2_ros/cmake)
+[0.505s] -- Found visualization_msgs: 4.9.2 (/opt/ros/humble/share/visualization_msgs/cmake)
+[0.532s] CMake Warning (dev) at /usr/share/cmake-3.22/Modules/FindPackageHandleStandardArgs.cmake:438 (message):
+[0.532s]   The package name passed to `find_package_handle_standard_args` (PkgConfig)
+[0.532s]   does not match the name of the calling package (gazebo).  This can lead to
+[0.532s]   problems in calling code that expects `find_package` result variables
+[0.533s]   (e.g., `_FOUND`) to follow a certain pattern.
+[0.533s] Call Stack (most recent call first):
+[0.533s]   /usr/share/cmake-3.22/Modules/FindPkgConfig.cmake:99 (find_package_handle_standard_args)
+[0.533s]   /usr/lib/x86_64-linux-gnu/cmake/gazebo/gazebo-config.cmake:72 (include)
+[0.533s]   CMakeLists.txt:13 (find_package)
+[0.533s] This warning is for project developers.  Use -Wno-dev to suppress it.
+[0.533s] 
+[0.555s] -- Found DART: /usr/include (Required is at least version "6.6") found components: dart 
+[0.581s] -- Found Protobuf: /usr/lib/x86_64-linux-gnu/libprotobuf.so (found version "3.12.4") 
+[0.582s] -- Looking for ignition-math6 -- found version 6.16.0
+[0.587s] -- Searching for dependencies of ignition-math6
+[0.588s] -- Looking for OGRE...
+[0.593s] -- Found Ogre Ghadamon (1.9.0)
+[0.593s] -- Found OGRE: optimized;/usr/lib/x86_64-linux-gnu/libOgreMain.so;debug;/usr/lib/x86_64-linux-gnu/libOgreMain.so
+[0.603s] -- Looking for OGRE_Paging...
+[0.603s] -- Found OGRE_Paging: optimized;/usr/lib/x86_64-linux-gnu/libOgrePaging.so;debug;/usr/lib/x86_64-linux-gnu/libOgrePaging.so
+[0.604s] -- Looking for OGRE_Terrain...
+[0.604s] -- Found OGRE_Terrain: optimized;/usr/lib/x86_64-linux-gnu/libOgreTerrain.so;debug;/usr/lib/x86_64-linux-gnu/libOgreTerrain.so
+[0.604s] -- Looking for OGRE_Property...
+[0.604s] -- Found OGRE_Property: optimized;/usr/lib/x86_64-linux-gnu/libOgreProperty.so;debug;/usr/lib/x86_64-linux-gnu/libOgreProperty.so
+[0.604s] -- Looking for OGRE_RTShaderSystem...
+[0.604s] -- Found OGRE_RTShaderSystem: optimized;/usr/lib/x86_64-linux-gnu/libOgreRTShaderSystem.so;debug;/usr/lib/x86_64-linux-gnu/libOgreRTShaderSystem.so
+[0.604s] -- Looking for OGRE_Volume...
+[0.604s] -- Found OGRE_Volume: optimized;/usr/lib/x86_64-linux-gnu/libOgreVolume.so;debug;/usr/lib/x86_64-linux-gnu/libOgreVolume.so
+[0.604s] -- Looking for OGRE_Overlay...
+[0.605s] -- Found OGRE_Overlay: optimized;/usr/lib/x86_64-linux-gnu/libOgreOverlay.so;debug;/usr/lib/x86_64-linux-gnu/libOgreOverlay.so
+[0.693s] -- Looking for ignition-math6 -- found version 6.16.0
+[0.693s] -- Looking for ignition-transport8 -- found version 8.2.1
+[0.694s] -- Searching for dependencies of ignition-transport8
+[0.709s] -- Found Protobuf: /usr/lib/x86_64-linux-gnu/libprotobuf.so (found suitable version "3.12.4", minimum required is "3") 
+[0.717s] -- Config-file not installed for ZeroMQ -- checking for pkg-config
+[0.721s] -- Checking for module 'libzmq >= 4'
+[0.731s] --   Found libzmq , version 4.3.4
+[0.762s] -- Checking for module 'uuid'
+[0.772s] --   Found uuid, version 2.37.2
+[0.796s] -- Looking for ignition-msgs5 -- found version 5.8.1
+[0.797s] -- Searching for dependencies of ignition-msgs5
+[0.813s] -- Looking for ignition-math6 -- found version 6.16.0
+[0.818s] -- Checking for module 'tinyxml2'
+[0.828s] --   Found tinyxml2, version 9.0.0
+[0.852s] -- Looking for ignition-msgs5 -- found version 5.8.1
+[0.853s] -- Looking for ignition-common3 -- found version 3.14.0
+[0.853s] -- Searching for dependencies of ignition-common3
+[0.853s] -- Looking for dlfcn.h - found
+[0.853s] -- Looking for libdl - found
+[0.864s] -- Searching for <ignition-common3> component [graphics]
+[0.864s] -- Looking for ignition-common3-graphics -- found version 3.14.0
+[0.864s] -- Searching for dependencies of ignition-common3-graphics
+[0.865s] -- Looking for ignition-math6 -- found version 6.16.0
+[0.866s] -- Looking for ignition-fuel_tools4 -- found version 4.4.0
+[0.866s] -- Searching for dependencies of ignition-fuel_tools4
+[0.899s] -- Checking for module 'jsoncpp'
+[0.910s] --   Found jsoncpp, version 1.9.5
+[0.938s] -- Checking for module 'libzip'
+[0.948s] --   Found libzip, version 1.7.3
+[0.972s] -- Looking for ignition-common3 -- found version 3.14.0
+[0.972s] -- Looking for ignition-math6 -- found version 6.16.0
+[0.973s] -- Looking for ignition-msgs5 -- found version 5.8.1
+[1.047s] -- Configuring done
+[1.069s] -- Generating done
+[1.076s] -- Build files have been written to: /home/hassan/Desktop/traffic_map/build/traffic_map
+[1.103s] Consolidate compiler generated dependencies of target map_parser
+[1.109s] [  8%] Building CXX object CMakeFiles/convert_glb_to_obj.dir/src/convert_glb_to_obj.cpp.o
+[1.113s] [ 33%] Built target map_parser
+[1.114s] Consolidate compiler generated dependencies of target traffic_world_plugin
+[1.124s] Consolidate compiler generated dependencies of target generate_gazebo_assets
+[1.127s] Consolidate compiler generated dependencies of target road_visualization
+[1.134s] [ 50%] Built target generate_gazebo_assets
+[1.135s] [ 66%] Built target traffic_world_plugin
+[1.140s] [ 91%] Built target road_visualization
+[1.664s] [100%] Linking CXX executable convert_glb_to_obj
+[1.734s] [100%] Built target convert_glb_to_obj
+[1.743s] Invoked command in '/home/hassan/Desktop/traffic_map/build/traffic_map' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hassan/Desktop/traffic_map/build/traffic_map -- -j12 -l12
+[1.751s] Invoking command in '/home/hassan/Desktop/traffic_map/build/traffic_map': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/hassan/Desktop/traffic_map/build/traffic_map
+[1.757s] -- Install configuration: ""
+[1.758s] -- Execute custom install script
+[1.758s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/lib/traffic_map/road_visualization
+[1.759s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/lib/traffic_map/generate_gazebo_assets
+[1.759s] -- Symlinking: /home/hassan/Desktop/traffic_map/install/traffic_map/lib/traffic_map/convert_glb_to_obj
+[1.766s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/lib/libtraffic_world_plugin.so
+[1.766s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/maps/bjb_sangjani_full.xodr
+[1.767s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/rviz/traffic_map.rviz
+[1.767s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/gazebo/traffic.world
+[1.767s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/ament_index/resource_index/package_run_dependencies/traffic_map
+[1.767s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/ament_index/resource_index/parent_prefix_path/traffic_map
+[1.768s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/environment/ament_prefix_path.sh
+[1.768s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/environment/ament_prefix_path.dsv
+[1.768s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/environment/path.sh
+[1.768s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/environment/path.dsv
+[1.768s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/local_setup.bash
+[1.769s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/local_setup.sh
+[1.769s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/local_setup.zsh
+[1.769s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/local_setup.dsv
+[1.769s] -- Symlinking: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/package.dsv
+[1.777s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/ament_index/resource_index/packages/traffic_map
+[1.777s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/cmake/traffic_mapConfig.cmake
+[1.777s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/cmake/traffic_mapConfig-version.cmake
+[1.777s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/package.xml
+[1.779s] Invoked command in '/home/hassan/Desktop/traffic_map/build/traffic_map' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/hassan/Desktop/traffic_map/build/traffic_map

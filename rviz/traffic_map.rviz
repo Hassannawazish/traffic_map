@@ -14,22 +14,23 @@ Visualization Manager:
         Value: /visualization_marker_array
         Reliability Policy: Reliable
         Durability Policy: Transient Local
-    - Class: rviz_default_plugins/Marker
-      Name: Vehicle
+    - Class: rviz_default_plugins/MarkerArray
+      Name: Traffic vehicles
       Enabled: true
       Topic:
-        Value: /visualization_marker
-        Reliability Policy: Reliable
-        Durability Policy: Transient Local
+        Value: /vehicle_markers
+        Reliability Policy: Best Effort
+        Durability Policy: Volatile
+        Depth: 1
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
     Fixed Frame: map
-    Frame Rate: 120
+    Frame Rate: 60
   Views:
     Current:
       Class: rviz_default_plugins/ThirdPersonFollower
-      Name: Vehicle Chase Camera
+      Name: Ego Chase Camera
       Distance: 30
       Near Clip Distance: 0.1
       Pitch: 0.5

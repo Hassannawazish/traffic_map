@@ -318,11 +318,17 @@ message(STATUS "Execute custom install script")
 # install("TARGETS" "road_visualization" "DESTINATION" "lib/traffic_map")
 include("/home/hassan/Desktop/traffic_map/build/traffic_map/ament_cmake_symlink_install_targets_0_${CMAKE_INSTALL_CONFIG_NAME}.cmake")
 
+# install("TARGETS" "generate_gazebo_assets" "convert_glb_to_obj" "traffic_world_plugin" "RUNTIME_DESTINATION" "lib/traffic_map" "LIBRARY_DESTINATION" "lib")
+include("/home/hassan/Desktop/traffic_map/build/traffic_map/ament_cmake_symlink_install_targets_1_${CMAKE_INSTALL_CONFIG_NAME}.cmake")
+
 # install(FILES "src/bjb_sangjani_full.xodr" "DESTINATION" "share/traffic_map/maps")
 ament_cmake_symlink_install_files("/home/hassan/Desktop/traffic_map" FILES "src/bjb_sangjani_full.xodr" "DESTINATION" "share/traffic_map/maps")
 
 # install(DIRECTORY "rviz" "DESTINATION" "share/traffic_map")
 ament_cmake_symlink_install_directory("/home/hassan/Desktop/traffic_map" DIRECTORY "rviz" "DESTINATION" "share/traffic_map")
+
+# install(DIRECTORY "gazebo" "DESTINATION" "share/traffic_map")
+ament_cmake_symlink_install_directory("/home/hassan/Desktop/traffic_map" DIRECTORY "gazebo" "DESTINATION" "share/traffic_map")
 
 # install(FILES "/home/hassan/Desktop/traffic_map/build/traffic_map/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/traffic_map" "DESTINATION" "share/ament_index/resource_index/package_run_dependencies")
 ament_cmake_symlink_install_files("/home/hassan/Desktop/traffic_map" FILES "/home/hassan/Desktop/traffic_map/build/traffic_map/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/traffic_map" "DESTINATION" "share/ament_index/resource_index/package_run_dependencies")

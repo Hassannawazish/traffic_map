@@ -39,7 +39,10 @@ int main(int argc, char ** argv) {
   rclcpp::init(argc, argv);
   auto node = rclcpp::Node::make_shared("road_visualization");
   auto qos = rclcpp::QoS(rclcpp::KeepLast(10)).transient_local().reliable();
-  auto marker_pub = node->create_publisher<visualization_msgs::msg::Marker>("visualization_marker", qos);
+  // Dynamic poses must never queue behind old frames. Keep only the newest
+  // cube pose and allow stale packets to be dropped.
+  auto vehicle_qos = rclcpp::QoS(rclcpp::KeepLast(1)).best_effort().durability_volatile();
+  auto vehicle_pub = node->create_publisher<visualization_msgs::msg::MarkerArray>("vehicle_markers", vehicle_qos);
   auto map_pub = node->create_publisher<visualization_msgs::msg::MarkerArray>("visualization_marker_array", qos);
   auto camera_pub = node->create_publisher<sensor_msgs::msg::CameraInfo>("camera_info", 1);
   tf2_ros::TransformBroadcaster tf_broadcaster(node);
@@ -142,32 +145,31 @@ int main(int argc, char ** argv) {
   };
   publish_map();
   const double vehicle_speed=node->declare_parameter<double>("vehicle_speed_mps",6.0);
-  constexpr double update_rate=120.0;
-  double travelled_distance=0.0;
+  constexpr double update_rate=60.0;
+  constexpr std::size_t vehicle_count=16;
+  std::vector<double> vehicle_distances(vehicle_count,0.0);
+  std::vector<double> vehicle_speeds(vehicle_count,vehicle_speed);
+  for (std::size_t i=1; i<vehicle_count; ++i) {
+    vehicle_distances[i]=80.0*static_cast<double>(i);
+    vehicle_speeds[i]=3.0+1.25*static_cast<double>(i%6);
+  }
   double camera_yaw=0.0;
   bool camera_yaw_initialized=false;
   rclcpp::Rate rate(update_rate);
   while (rclcpp::ok()) {
-    const auto stamp=node->now(); visualization_msgs::msg::Marker vehicle;
-    vehicle.header.stamp=stamp; vehicle.header.frame_id="map"; vehicle.ns="road_visualization"; vehicle.id=1000;
-    vehicle.type=visualization_msgs::msg::Marker::CUBE; vehicle.action=visualization_msgs::msg::Marker::ADD;
-    vehicle.pose.orientation.w=1.0; vehicle.scale.x=4.5; vehicle.scale.y=2.0; vehicle.scale.z=1.5;
-    vehicle.color.r=0.1F; vehicle.color.g=0.4F; vehicle.color.b=1.0F; vehicle.color.a=1.0F;
+    const auto stamp=node->now();
     if (route_distance.size()>1 && route_distance.back()>0.0) {
-      const auto position=route_position(travelled_distance);
-      const auto look_ahead=route_position(travelled_distance+10.0);
-      vehicle.pose.position.x=position.first; vehicle.pose.position.y=position.second;
-      vehicle.pose.position.z=0.75;
+      const auto position=route_position(vehicle_distances[0]);
+      const auto look_ahead=route_position(vehicle_distances[0]+10.0);
       const double yaw=std::atan2(look_ahead.second-position.second,look_ahead.first-position.first);
-      vehicle.pose.orientation.z=std::sin(yaw*0.5);
-      vehicle.pose.orientation.w=std::cos(yaw*0.5);
 
       geometry_msgs::msg::TransformStamped transform;
       transform.header.stamp=stamp; transform.header.frame_id="map"; transform.child_frame_id="vehicle";
-      transform.transform.translation.x=vehicle.pose.position.x;
-      transform.transform.translation.y=vehicle.pose.position.y;
-      transform.transform.translation.z=vehicle.pose.position.z;
-      transform.transform.rotation=vehicle.pose.orientation;
+      transform.transform.translation.x=position.first;
+      transform.transform.translation.y=position.second;
+      transform.transform.translation.z=0.75;
+      transform.transform.rotation.z=std::sin(yaw*0.5);
+      transform.transform.rotation.w=std::cos(yaw*0.5);
       tf_broadcaster.sendTransform(transform);
 
       // Smooth only the chase camera heading. The vehicle itself keeps the
@@ -188,9 +190,33 @@ int main(int argc, char ** argv) {
       camera_transform.transform.rotation.z=std::sin(camera_yaw*0.5);
       camera_transform.transform.rotation.w=std::cos(camera_yaw*0.5);
       tf_broadcaster.sendTransform(camera_transform);
-      travelled_distance=std::fmod(travelled_distance+vehicle_speed/update_rate,route_distance.back());
+
+      // Send every vehicle atomically in one depth-1 array. RViz can only see
+      // a complete newest traffic frame, never a mixture of stale poses.
+      visualization_msgs::msg::MarkerArray traffic;
+      traffic.markers.reserve(vehicle_count);
+      for (std::size_t i=0; i<vehicle_count; ++i) {
+        const auto car_position=route_position(vehicle_distances[i]);
+        const auto car_ahead=route_position(vehicle_distances[i]+10.0);
+        const double car_yaw=std::atan2(car_ahead.second-car_position.second,car_ahead.first-car_position.first);
+        const double lateral=3.2*static_cast<double>(i%4);
+        visualization_msgs::msg::Marker car;
+        car.header.stamp=stamp; car.header.frame_id="map"; car.ns="traffic";
+        car.id=1000+static_cast<int>(i); car.type=visualization_msgs::msg::Marker::CUBE;
+        car.action=visualization_msgs::msg::Marker::ADD; car.pose.orientation.z=std::sin(car_yaw*0.5);
+        car.pose.orientation.w=std::cos(car_yaw*0.5);
+        car.pose.position.x=car_position.first+std::sin(car_yaw)*lateral;
+        car.pose.position.y=car_position.second-std::cos(car_yaw)*lateral;
+        car.pose.position.z=0.75;
+        car.scale.x=4.5; car.scale.y=2.0; car.scale.z=1.5;
+        car.color.r=0.15F+0.12F*static_cast<float>(i%5);
+        car.color.g=0.25F+0.10F*static_cast<float>((i+2)%5);
+        car.color.b=0.9F-0.10F*static_cast<float>(i%5); car.color.a=1.0F;
+        traffic.markers.push_back(car);
+        vehicle_distances[i]=std::fmod(vehicle_distances[i]+vehicle_speeds[i]/update_rate,route_distance.back());
+      }
+      vehicle_pub->publish(traffic);
     }
-    marker_pub->publish(vehicle);
     sensor_msgs::msg::CameraInfo camera; camera.header.stamp=stamp; camera.header.frame_id="map";
     camera.distortion_model="equidistant"; camera.p[3]=4808.0; camera.p[7]=3099.0; camera_pub->publish(camera);
     rclcpp::spin_some(node); rate.sleep();

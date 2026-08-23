@@ -65,6 +65,9 @@ CMAKE_BINARY_DIR = /home/hassan/Desktop/traffic_map/build/traffic_map
 # The main recursive "all" target.
 all: CMakeFiles/map_parser.dir/all
 all: CMakeFiles/road_visualization.dir/all
+all: CMakeFiles/generate_gazebo_assets.dir/all
+all: CMakeFiles/convert_glb_to_obj.dir/all
+all: CMakeFiles/traffic_world_plugin.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -76,6 +79,9 @@ clean: CMakeFiles/uninstall.dir/clean
 clean: CMakeFiles/traffic_map_uninstall.dir/clean
 clean: CMakeFiles/map_parser.dir/clean
 clean: CMakeFiles/road_visualization.dir/clean
+clean: CMakeFiles/generate_gazebo_assets.dir/clean
+clean: CMakeFiles/convert_glb_to_obj.dir/clean
+clean: CMakeFiles/traffic_world_plugin.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -137,7 +143,7 @@ CMakeFiles/traffic_map_uninstall.dir/clean:
 CMakeFiles/map_parser.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/map_parser.dir/build.make CMakeFiles/map_parser.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/map_parser.dir/build.make CMakeFiles/map_parser.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/hassan/Desktop/traffic_map/build/traffic_map/CMakeFiles --progress-num=1,2,3 "Built target map_parser"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/hassan/Desktop/traffic_map/build/traffic_map/CMakeFiles --progress-num=5,6,7 "Built target map_parser"
 .PHONY : CMakeFiles/map_parser.dir/all
 
 # Build rule for subdir invocation for target.
@@ -163,7 +169,7 @@ CMakeFiles/map_parser.dir/clean:
 CMakeFiles/road_visualization.dir/all: CMakeFiles/map_parser.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/road_visualization.dir/build.make CMakeFiles/road_visualization.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/road_visualization.dir/build.make CMakeFiles/road_visualization.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/hassan/Desktop/traffic_map/build/traffic_map/CMakeFiles --progress-num=4,5,6 "Built target road_visualization"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/hassan/Desktop/traffic_map/build/traffic_map/CMakeFiles --progress-num=8,9,10 "Built target road_visualization"
 .PHONY : CMakeFiles/road_visualization.dir/all
 
 # Build rule for subdir invocation for target.
@@ -181,6 +187,84 @@ road_visualization: CMakeFiles/road_visualization.dir/rule
 CMakeFiles/road_visualization.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/road_visualization.dir/build.make CMakeFiles/road_visualization.dir/clean
 .PHONY : CMakeFiles/road_visualization.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/generate_gazebo_assets.dir
+
+# All Build rule for target.
+CMakeFiles/generate_gazebo_assets.dir/all: CMakeFiles/map_parser.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/generate_gazebo_assets.dir/build.make CMakeFiles/generate_gazebo_assets.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/generate_gazebo_assets.dir/build.make CMakeFiles/generate_gazebo_assets.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/hassan/Desktop/traffic_map/build/traffic_map/CMakeFiles --progress-num=3,4 "Built target generate_gazebo_assets"
+.PHONY : CMakeFiles/generate_gazebo_assets.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/generate_gazebo_assets.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hassan/Desktop/traffic_map/build/traffic_map/CMakeFiles 5
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/generate_gazebo_assets.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hassan/Desktop/traffic_map/build/traffic_map/CMakeFiles 0
+.PHONY : CMakeFiles/generate_gazebo_assets.dir/rule
+
+# Convenience name for target.
+generate_gazebo_assets: CMakeFiles/generate_gazebo_assets.dir/rule
+.PHONY : generate_gazebo_assets
+
+# clean rule for target.
+CMakeFiles/generate_gazebo_assets.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/generate_gazebo_assets.dir/build.make CMakeFiles/generate_gazebo_assets.dir/clean
+.PHONY : CMakeFiles/generate_gazebo_assets.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/convert_glb_to_obj.dir
+
+# All Build rule for target.
+CMakeFiles/convert_glb_to_obj.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/convert_glb_to_obj.dir/build.make CMakeFiles/convert_glb_to_obj.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/convert_glb_to_obj.dir/build.make CMakeFiles/convert_glb_to_obj.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/hassan/Desktop/traffic_map/build/traffic_map/CMakeFiles --progress-num=1,2 "Built target convert_glb_to_obj"
+.PHONY : CMakeFiles/convert_glb_to_obj.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/convert_glb_to_obj.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hassan/Desktop/traffic_map/build/traffic_map/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/convert_glb_to_obj.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hassan/Desktop/traffic_map/build/traffic_map/CMakeFiles 0
+.PHONY : CMakeFiles/convert_glb_to_obj.dir/rule
+
+# Convenience name for target.
+convert_glb_to_obj: CMakeFiles/convert_glb_to_obj.dir/rule
+.PHONY : convert_glb_to_obj
+
+# clean rule for target.
+CMakeFiles/convert_glb_to_obj.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/convert_glb_to_obj.dir/build.make CMakeFiles/convert_glb_to_obj.dir/clean
+.PHONY : CMakeFiles/convert_glb_to_obj.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/traffic_world_plugin.dir
+
+# All Build rule for target.
+CMakeFiles/traffic_world_plugin.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/traffic_world_plugin.dir/build.make CMakeFiles/traffic_world_plugin.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/traffic_world_plugin.dir/build.make CMakeFiles/traffic_world_plugin.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/hassan/Desktop/traffic_map/build/traffic_map/CMakeFiles --progress-num=11,12 "Built target traffic_world_plugin"
+.PHONY : CMakeFiles/traffic_world_plugin.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/traffic_world_plugin.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hassan/Desktop/traffic_map/build/traffic_map/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/traffic_world_plugin.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hassan/Desktop/traffic_map/build/traffic_map/CMakeFiles 0
+.PHONY : CMakeFiles/traffic_world_plugin.dir/rule
+
+# Convenience name for target.
+traffic_world_plugin: CMakeFiles/traffic_world_plugin.dir/rule
+.PHONY : traffic_world_plugin
+
+# clean rule for target.
+CMakeFiles/traffic_world_plugin.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/traffic_world_plugin.dir/build.make CMakeFiles/traffic_world_plugin.dir/clean
+.PHONY : CMakeFiles/traffic_world_plugin.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

@@ -15,6 +15,18 @@ sudo apt install ros-humble-desktop python3-colcon-common-extensions libpugixml-
 ./run.sh
 ```
 
+## Smooth Gazebo simulation
+
+For a game-style camera and multiple vehicles without RViz marker flicker:
+
+```bash
+./run_gazebo.sh
+```
+
+This generates a static mesh from the complete XODR map, launches Gazebo, and
+animates 16 vehicle models at different speeds. The Gazebo camera tracks the
+ego vehicle directly.
+
 The script builds the package, starts the marker node, and opens RViz 2 with the
 correct fixed frame and Marker display. ROS 2 does not require `roscore`.
 

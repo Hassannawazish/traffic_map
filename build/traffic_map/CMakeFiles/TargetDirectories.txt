@@ -2,6 +2,9 @@
 /home/hassan/Desktop/traffic_map/build/traffic_map/CMakeFiles/traffic_map_uninstall.dir
 /home/hassan/Desktop/traffic_map/build/traffic_map/CMakeFiles/map_parser.dir
 /home/hassan/Desktop/traffic_map/build/traffic_map/CMakeFiles/road_visualization.dir
+/home/hassan/Desktop/traffic_map/build/traffic_map/CMakeFiles/generate_gazebo_assets.dir
+/home/hassan/Desktop/traffic_map/build/traffic_map/CMakeFiles/convert_glb_to_obj.dir
+/home/hassan/Desktop/traffic_map/build/traffic_map/CMakeFiles/traffic_world_plugin.dir
 /home/hassan/Desktop/traffic_map/build/traffic_map/CMakeFiles/test.dir
 /home/hassan/Desktop/traffic_map/build/traffic_map/CMakeFiles/edit_cache.dir
 /home/hassan/Desktop/traffic_map/build/traffic_map/CMakeFiles/rebuild_cache.dir

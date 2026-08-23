@@ -1,6 +1,11 @@
 /home/hassan/Desktop/traffic_map/install/traffic_map/lib/traffic_map/road_visualization
+/home/hassan/Desktop/traffic_map/install/traffic_map/lib/traffic_map/generate_gazebo_assets
+/home/hassan/Desktop/traffic_map/install/traffic_map/lib/traffic_map/convert_glb_to_obj
+/home/hassan/Desktop/traffic_map/install/traffic_map/lib/libtraffic_world_plugin.so
 /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/maps/bjb_sangjani_full.xodr
 /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/rviz/traffic_map.rviz
+/home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/gazebo/model_database/database.config
+/home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/gazebo/traffic.world
 /home/hassan/Desktop/traffic_map/install/traffic_map/share/ament_index/resource_index/package_run_dependencies/traffic_map
 /home/hassan/Desktop/traffic_map/install/traffic_map/share/ament_index/resource_index/parent_prefix_path/traffic_map
 /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/environment/ament_prefix_path.sh
