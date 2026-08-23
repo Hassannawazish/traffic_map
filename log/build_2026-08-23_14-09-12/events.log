@@ -1,0 +1,332 @@
+[0.000000] (-) TimerEvent: {}
+[0.000341] (traffic_map) JobQueued: {'identifier': 'traffic_map', 'dependencies': OrderedDict()}
+[0.000842] (traffic_map) JobStarted: {'identifier': 'traffic_map'}
+[0.016558] (traffic_map) JobProgress: {'identifier': 'traffic_map', 'progress': 'cmake'}
+[0.018546] (traffic_map) JobProgress: {'identifier': 'traffic_map', 'progress': 'build'}
+[0.020237] (traffic_map) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/hassan/Desktop/traffic_map/build/traffic_map', '--', '-j12', '-l12'], 'cwd': '/home/hassan/Desktop/traffic_map/build/traffic_map', 'env': OrderedDict([('GJS_DEBUG_TOPICS', 'JS ERROR;JS LOG'), ('LESSOPEN', '| /usr/bin/lesspipe %s'), ('VSCODE_CWD', '/home/hassan'), ('VSCODE_ESM_ENTRYPOINT', 'vs/workbench/api/node/extensionHostProcess'), ('CODEX_CI', '1'), ('USER', 'hassan'), ('SNAP_COMMON', '/var/snap/code/common'), ('LC_TIME', 'fr_FR.UTF-8'), ('CODEX_INTERNAL_ORIGINATOR_OVERRIDE', 'codex_vscode'), ('VSCODE_NLS_CONFIG', '{"userLocale":"en-us","osLocale":"en-us","resolvedLanguage":"en","defaultMessagesFile":"/snap/code/258/usr/share/code/resources/app/out/nls.messages.json","locale":"en-us","availableLanguages":{}}'), ('FONTCONFIG_PATH', '/etc/fonts'), ('GIO_MODULE_DIR', '/home/hassan/snap/code/common/.cache/gio-modules'), ('VSCODE_HANDLES_UNCAUGHT_ERRORS', 'true'), ('XDG_SESSION_TYPE', 'wayland'), ('DEBUG', 'release'), ('SNAP_UID', '1000'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/hassan'), ('CHROME_DESKTOP', 'code.desktop'), ('SNAP_LIBRARY_PATH', '/var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32'), ('DESKTOP_SESSION', 'ubuntu'), ('SNAP_USER_DATA', '/home/hassan/snap/code/258'), ('GTK_PATH', '/snap/code/258/usr/lib/x86_64-linux-gnu/gtk-3.0'), ('VSCODE_IPC_HOOK', '/run/user/1000/vscode-a548163b-1.13-main.sock'), ('GTK_IM_MODULE_FILE', '/home/hassan/snap/code/common/.cache/immodules/immodules.cache'), ('GIO_LAUNCHED_DESKTOP_FILE', '/var/lib/snapd/desktop/applications/code_code.desktop'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('PAGER', 'cat'), ('LC_MONETARY', 'fr_FR.UTF-8'), ('MANAGERPID', '1401'), ('LC_CTYPE', 'C.UTF-8'), ('SYSTEMD_EXEC_PID', '1577'), ('IM_CONFIG_CHECK_ENV', '1'), ('NO_COLOR', '1'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('SNAP_REVISION', '258'), ('COLORTERM', ''), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '2226'), ('VSCODE_CRASH_REPORTER_PROCESS_TYPE', 'extensionHost'), ('IM_CONFIG_PHASE', '1'), ('WAYLAND_DISPLAY', 'wayland-0'), ('CODEX_PERMISSION_PROFILE', ':workspace'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'hassan'), ('SNAP_CONTEXT', 'GPmV9Qlcn1E796wdIn3tNR8JshDjwBuE0xHjPj6-8rdAWUajporJ'), ('JOURNAL_STREAM', '8:15625'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_CONFIG_DIRS_VSCODE_SNAP_ORIG', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('XDG_SESSION_CLASS', 'user'), ('SNAP_VERSION', '110a328e'), ('XDG_DATA_DIRS_VSCODE_SNAP_ORIG', '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('RUST_LOG', 'warn'), ('USERNAME', 'hassan'), ('TERM', 'dumb'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('SNAP_INSTANCE_NAME', 'code'), ('FC_FONTATIONS', '1'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/home/hassan/.codex/tmp/arg0/codex-arg0RmHbIi:/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/hassan/.vscode/extensions/openai.chatgpt-26.818.41705-linux-x64/bin/linux-x86_64'), ('SESSION_MANAGER', 'local/hassan-ROG-Strix-G712LV-G712LV:@/tmp/.ICE-unix/1548,unix/hassan-ROG-Strix-G712LV-G712LV:/tmp/.ICE-unix/1548'), ('GTK_EXE_PREFIX', '/snap/code/258/usr'), ('CODEX_SESSION_ID', '01a02c32-6467-7672-b8b5-e9a7b18ee57c'), ('INVOCATION_ID', '6de3b993612849b28959b0336250383c'), ('XDG_MENU_PREFIX', 'gnome-'), ('LC_ADDRESS', 'fr_FR.UTF-8'), ('GNOME_SETUP_DISPLAY', ':1'), ('SNAP_DATA', '/var/snap/code/258'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('GDK_BACKEND', 'x11'), ('DISPLAY', ':0'), ('LOCPATH', '/snap/code/258/usr/lib/locale'), ('CODEX_SANDBOX_NETWORK_DISABLED', '1'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('LC_TELEPHONE', 'fr_FR.UTF-8'), ('XDG_DATA_HOME', '/home/hassan/snap/code/258/.local/share'), ('XMODIFIERS', '@im=ibus'), ('GH_PAGER', 'cat'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/.mutter-Xwaylandauth.FZEIU3'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SNAP_USER_COMMON', '/home/hassan/snap/code/common'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('GSETTINGS_SCHEMA_DIR', '/home/hassan/snap/code/258/.local/share/glib-2.0/schemas'), ('SNAP_ARCH', 'amd64'), ('AMENT_PREFIX_PATH', '/opt/ros/humble'), ('SNAP_COOKIE', 'GPmV9Qlcn1E796wdIn3tNR8JshDjwBuE0xHjPj6-8rdAWUajporJ'), ('SHELL', '/bin/bash'), ('LC_NAME', 'fr_FR.UTF-8'), ('GDK_PIXBUF_MODULEDIR', '/snap/code/258/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders'), ('QT_ACCESSIBILITY', '1'), ('ELECTRON_RUN_AS_NODE', '1'), ('GDMSESSION', 'ubuntu'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('FONTCONFIG_FILE', '/etc/fonts/fonts.conf'), ('SNAP_NAME', 'code'), ('CODEX_THREAD_ID', '01a02c32-6467-7672-b8b5-e9a7b18ee57c'), ('LC_MEASUREMENT', 'fr_FR.UTF-8'), ('GDK_PIXBUF_MODULE_FILE', '/home/hassan/snap/code/common/.cache/gdk-pixbuf-loaders.cache'), ('GJS_DEBUG_OUTPUT', 'stderr'), ('LC_IDENTIFICATION', 'fr_FR.UTF-8'), ('SNAP_LAUNCHER_ARCH_TRIPLET', 'x86_64-linux-gnu'), ('GIT_PAGER', 'cat'), ('QT_IM_MODULE', 'ibus'), ('PWD', '/home/hassan/Desktop/traffic_map/build/traffic_map'), ('VSCODE_CLI', '1'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('SNAP_REAL_HOME', '/home/hassan'), ('VSCODE_CODE_CACHE_PATH', '/home/hassan/.config/Code/CachedData/110a328ea54b42367b803ec53ee0bf52ef26b419'), ('XDG_DATA_DIRS', '/home/hassan/snap/code/258/.local/share:/home/hassan/snap/code/258:/snap/code/258/usr/share:/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('SNAP_EUID', '1000'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('SNAP', '/snap/code/258'), ('LC_NUMERIC', 'fr_FR.UTF-8'), ('LC_PAPER', 'fr_FR.UTF-8'), ('COLCON', '1'), ('ELECTRON_NO_ATTACH_CONSOLE', '1'), ('VSCODE_PID', '2271'), ('CMAKE_PREFIX_PATH', '/opt/ros/humble')]), 'shell': False}
+[0.099814] (-) TimerEvent: {}
+[0.152643] (traffic_map) StdoutLine: {'line': b'[ 16%] Built target convert_glb_to_obj\n'}
+[0.153268] (traffic_map) StdoutLine: {'line': b'[ 41%] Built target map_parser\n'}
+[0.199996] (-) TimerEvent: {}
+[0.213871] (traffic_map) StdoutLine: {'line': b'[ 58%] Built target generate_gazebo_assets\n'}
+[0.237379] (traffic_map) StdoutLine: {'line': b'[ 66%] Building CXX object CMakeFiles/traffic_world_plugin.dir/src/traffic_world_plugin.cpp.o\n'}
+[0.244236] (traffic_map) StdoutLine: {'line': b'[ 91%] Built target road_visualization\n'}
+[0.300136] (-) TimerEvent: {}
+[0.400495] (-) TimerEvent: {}
+[0.500945] (-) TimerEvent: {}
+[0.601222] (-) TimerEvent: {}
+[0.701473] (-) TimerEvent: {}
+[0.801824] (-) TimerEvent: {}
+[0.902126] (-) TimerEvent: {}
+[1.002453] (-) TimerEvent: {}
+[1.102938] (-) TimerEvent: {}
+[1.203410] (-) TimerEvent: {}
+[1.304992] (-) TimerEvent: {}
+[1.405313] (-) TimerEvent: {}
+[1.505582] (-) TimerEvent: {}
+[1.605933] (-) TimerEvent: {}
+[1.706264] (-) TimerEvent: {}
+[1.806568] (-) TimerEvent: {}
+[1.906871] (-) TimerEvent: {}
+[2.007195] (-) TimerEvent: {}
+[2.107495] (-) TimerEvent: {}
+[2.207920] (-) TimerEvent: {}
+[2.308357] (-) TimerEvent: {}
+[2.408680] (-) TimerEvent: {}
+[2.508970] (-) TimerEvent: {}
+[2.609264] (-) TimerEvent: {}
+[2.709547] (-) TimerEvent: {}
+[2.809799] (-) TimerEvent: {}
+[2.910056] (-) TimerEvent: {}
+[3.010427] (-) TimerEvent: {}
+[3.110981] (-) TimerEvent: {}
+[3.211433] (-) TimerEvent: {}
+[3.311830] (-) TimerEvent: {}
+[3.412072] (-) TimerEvent: {}
+[3.512328] (-) TimerEvent: {}
+[3.612599] (-) TimerEvent: {}
+[3.712867] (-) TimerEvent: {}
+[3.813115] (-) TimerEvent: {}
+[3.913399] (-) TimerEvent: {}
+[4.013663] (-) TimerEvent: {}
+[4.113947] (-) TimerEvent: {}
+[4.214197] (-) TimerEvent: {}
+[4.314461] (-) TimerEvent: {}
+[4.414715] (-) TimerEvent: {}
+[4.515091] (-) TimerEvent: {}
+[4.615353] (-) TimerEvent: {}
+[4.715635] (-) TimerEvent: {}
+[4.815921] (-) TimerEvent: {}
+[4.916193] (-) TimerEvent: {}
+[5.016485] (-) TimerEvent: {}
+[5.116788] (-) TimerEvent: {}
+[5.217057] (-) TimerEvent: {}
+[5.317303] (-) TimerEvent: {}
+[5.417544] (-) TimerEvent: {}
+[5.517964] (-) TimerEvent: {}
+[5.618344] (-) TimerEvent: {}
+[5.718667] (-) TimerEvent: {}
+[5.818966] (-) TimerEvent: {}
+[5.919221] (-) TimerEvent: {}
+[6.019474] (-) TimerEvent: {}
+[6.119917] (-) TimerEvent: {}
+[6.220364] (-) TimerEvent: {}
+[6.320725] (-) TimerEvent: {}
+[6.421136] (-) TimerEvent: {}
+[6.521475] (-) TimerEvent: {}
+[6.621711] (-) TimerEvent: {}
+[6.722111] (-) TimerEvent: {}
+[6.822487] (-) TimerEvent: {}
+[6.922871] (-) TimerEvent: {}
+[7.023138] (-) TimerEvent: {}
+[7.123428] (-) TimerEvent: {}
+[7.223741] (-) TimerEvent: {}
+[7.324117] (-) TimerEvent: {}
+[7.424384] (-) TimerEvent: {}
+[7.524724] (-) TimerEvent: {}
+[7.625216] (-) TimerEvent: {}
+[7.725466] (-) TimerEvent: {}
+[7.825756] (-) TimerEvent: {}
+[7.926016] (-) TimerEvent: {}
+[8.026306] (-) TimerEvent: {}
+[8.126544] (-) TimerEvent: {}
+[8.226783] (-) TimerEvent: {}
+[8.327059] (-) TimerEvent: {}
+[8.427340] (-) TimerEvent: {}
+[8.527601] (-) TimerEvent: {}
+[8.627892] (-) TimerEvent: {}
+[8.728231] (-) TimerEvent: {}
+[8.828585] (-) TimerEvent: {}
+[8.928871] (-) TimerEvent: {}
+[9.029122] (-) TimerEvent: {}
+[9.129355] (-) TimerEvent: {}
+[9.229593] (-) TimerEvent: {}
+[9.329948] (-) TimerEvent: {}
+[9.430170] (-) TimerEvent: {}
+[9.530426] (-) TimerEvent: {}
+[9.630641] (-) TimerEvent: {}
+[9.730900] (-) TimerEvent: {}
+[9.831180] (-) TimerEvent: {}
+[9.931482] (-) TimerEvent: {}
+[10.031764] (-) TimerEvent: {}
+[10.132052] (-) TimerEvent: {}
+[10.232448] (-) TimerEvent: {}
+[10.332741] (-) TimerEvent: {}
+[10.433072] (-) TimerEvent: {}
+[10.533621] (-) TimerEvent: {}
+[10.634264] (-) TimerEvent: {}
+[10.734592] (-) TimerEvent: {}
+[10.834926] (-) TimerEvent: {}
+[10.935180] (-) TimerEvent: {}
+[11.035548] (-) TimerEvent: {}
+[11.135909] (-) TimerEvent: {}
+[11.236187] (-) TimerEvent: {}
+[11.336493] (-) TimerEvent: {}
+[11.436731] (-) TimerEvent: {}
+[11.537067] (-) TimerEvent: {}
+[11.637316] (-) TimerEvent: {}
+[11.737685] (-) TimerEvent: {}
+[11.837983] (-) TimerEvent: {}
+[11.938230] (-) TimerEvent: {}
+[12.038496] (-) TimerEvent: {}
+[12.139080] (-) TimerEvent: {}
+[12.239539] (-) TimerEvent: {}
+[12.339843] (-) TimerEvent: {}
+[12.440221] (-) TimerEvent: {}
+[12.540496] (-) TimerEvent: {}
+[12.640804] (-) TimerEvent: {}
+[12.741063] (-) TimerEvent: {}
+[12.841349] (-) TimerEvent: {}
+[12.941657] (-) TimerEvent: {}
+[13.041973] (-) TimerEvent: {}
+[13.142266] (-) TimerEvent: {}
+[13.242568] (-) TimerEvent: {}
+[13.342904] (-) TimerEvent: {}
+[13.443168] (-) TimerEvent: {}
+[13.543441] (-) TimerEvent: {}
+[13.643761] (-) TimerEvent: {}
+[13.744117] (-) TimerEvent: {}
+[13.844552] (-) TimerEvent: {}
+[13.944935] (-) TimerEvent: {}
+[14.045266] (-) TimerEvent: {}
+[14.145598] (-) TimerEvent: {}
+[14.245934] (-) TimerEvent: {}
+[14.346224] (-) TimerEvent: {}
+[14.446494] (-) TimerEvent: {}
+[14.546866] (-) TimerEvent: {}
+[14.647107] (-) TimerEvent: {}
+[14.747460] (-) TimerEvent: {}
+[14.848031] (-) TimerEvent: {}
+[14.948377] (-) TimerEvent: {}
+[15.048657] (-) TimerEvent: {}
+[15.148978] (-) TimerEvent: {}
+[15.249221] (-) TimerEvent: {}
+[15.349452] (-) TimerEvent: {}
+[15.449692] (-) TimerEvent: {}
+[15.549945] (-) TimerEvent: {}
+[15.650164] (-) TimerEvent: {}
+[15.750502] (-) TimerEvent: {}
+[15.850971] (-) TimerEvent: {}
+[15.951174] (-) TimerEvent: {}
+[16.051384] (-) TimerEvent: {}
+[16.151618] (-) TimerEvent: {}
+[16.251876] (-) TimerEvent: {}
+[16.352227] (-) TimerEvent: {}
+[16.454365] (-) TimerEvent: {}
+[16.554607] (-) TimerEvent: {}
+[16.654830] (-) TimerEvent: {}
+[16.755041] (-) TimerEvent: {}
+[16.855307] (-) TimerEvent: {}
+[16.955596] (-) TimerEvent: {}
+[17.055830] (-) TimerEvent: {}
+[17.156164] (-) TimerEvent: {}
+[17.256579] (-) TimerEvent: {}
+[17.356864] (-) TimerEvent: {}
+[17.457216] (-) TimerEvent: {}
+[17.557610] (-) TimerEvent: {}
+[17.657866] (-) TimerEvent: {}
+[17.758087] (-) TimerEvent: {}
+[17.858317] (-) TimerEvent: {}
+[17.958619] (-) TimerEvent: {}
+[18.058924] (-) TimerEvent: {}
+[18.159180] (-) TimerEvent: {}
+[18.259468] (-) TimerEvent: {}
+[18.360047] (-) TimerEvent: {}
+[18.460272] (-) TimerEvent: {}
+[18.560522] (-) TimerEvent: {}
+[18.660783] (-) TimerEvent: {}
+[18.761035] (-) TimerEvent: {}
+[18.861292] (-) TimerEvent: {}
+[18.961686] (-) TimerEvent: {}
+[19.062245] (-) TimerEvent: {}
+[19.162474] (-) TimerEvent: {}
+[19.262680] (-) TimerEvent: {}
+[19.362993] (-) TimerEvent: {}
+[19.463194] (-) TimerEvent: {}
+[19.563392] (-) TimerEvent: {}
+[19.663592] (-) TimerEvent: {}
+[19.763835] (-) TimerEvent: {}
+[19.864054] (-) TimerEvent: {}
+[19.964295] (-) TimerEvent: {}
+[20.064521] (-) TimerEvent: {}
+[20.164805] (-) TimerEvent: {}
+[20.265075] (-) TimerEvent: {}
+[20.365388] (-) TimerEvent: {}
+[20.465664] (-) TimerEvent: {}
+[20.565918] (-) TimerEvent: {}
+[20.666128] (-) TimerEvent: {}
+[20.766396] (-) TimerEvent: {}
+[20.866865] (-) TimerEvent: {}
+[20.967158] (-) TimerEvent: {}
+[21.067415] (-) TimerEvent: {}
+[21.167648] (-) TimerEvent: {}
+[21.267932] (-) TimerEvent: {}
+[21.368172] (-) TimerEvent: {}
+[21.468433] (-) TimerEvent: {}
+[21.568670] (-) TimerEvent: {}
+[21.668936] (-) TimerEvent: {}
+[21.769223] (-) TimerEvent: {}
+[21.869455] (-) TimerEvent: {}
+[21.969688] (-) TimerEvent: {}
+[22.069970] (-) TimerEvent: {}
+[22.170280] (-) TimerEvent: {}
+[22.270583] (-) TimerEvent: {}
+[22.370843] (-) TimerEvent: {}
+[22.471161] (-) TimerEvent: {}
+[22.571426] (-) TimerEvent: {}
+[22.671779] (-) TimerEvent: {}
+[22.772146] (-) TimerEvent: {}
+[22.872373] (-) TimerEvent: {}
+[22.972628] (-) TimerEvent: {}
+[23.072830] (-) TimerEvent: {}
+[23.173224] (-) TimerEvent: {}
+[23.273446] (-) TimerEvent: {}
+[23.373711] (-) TimerEvent: {}
+[23.474016] (-) TimerEvent: {}
+[23.574396] (-) TimerEvent: {}
+[23.674639] (-) TimerEvent: {}
+[23.774967] (-) TimerEvent: {}
+[23.875290] (-) TimerEvent: {}
+[23.975722] (-) TimerEvent: {}
+[24.075990] (-) TimerEvent: {}
+[24.176332] (-) TimerEvent: {}
+[24.276652] (-) TimerEvent: {}
+[24.376930] (-) TimerEvent: {}
+[24.477238] (-) TimerEvent: {}
+[24.577508] (-) TimerEvent: {}
+[24.677834] (-) TimerEvent: {}
+[24.778070] (-) TimerEvent: {}
+[24.878899] (-) TimerEvent: {}
+[24.979247] (-) TimerEvent: {}
+[25.079528] (-) TimerEvent: {}
+[25.179811] (-) TimerEvent: {}
+[25.280064] (-) TimerEvent: {}
+[25.380409] (-) TimerEvent: {}
+[25.480766] (-) TimerEvent: {}
+[25.581048] (-) TimerEvent: {}
+[25.681300] (-) TimerEvent: {}
+[25.781582] (-) TimerEvent: {}
+[25.882044] (-) TimerEvent: {}
+[25.982378] (-) TimerEvent: {}
+[26.082682] (-) TimerEvent: {}
+[26.183077] (-) TimerEvent: {}
+[26.283388] (-) TimerEvent: {}
+[26.383718] (-) TimerEvent: {}
+[26.484004] (-) TimerEvent: {}
+[26.584269] (-) TimerEvent: {}
+[26.684635] (-) TimerEvent: {}
+[26.784909] (-) TimerEvent: {}
+[26.885167] (-) TimerEvent: {}
+[26.985543] (-) TimerEvent: {}
+[27.085861] (-) TimerEvent: {}
+[27.186193] (-) TimerEvent: {}
+[27.286412] (-) TimerEvent: {}
+[27.386670] (-) TimerEvent: {}
+[27.486931] (-) TimerEvent: {}
+[27.587219] (-) TimerEvent: {}
+[27.687530] (-) TimerEvent: {}
+[27.787860] (-) TimerEvent: {}
+[27.888111] (-) TimerEvent: {}
+[27.988335] (-) TimerEvent: {}
+[28.088640] (-) TimerEvent: {}
+[28.165581] (traffic_map) StdoutLine: {'line': b'[100%] Linking CXX shared library libtraffic_world_plugin.so\n'}
+[28.188814] (-) TimerEvent: {}
+[28.289286] (-) TimerEvent: {}
+[28.389669] (-) TimerEvent: {}
+[28.490022] (-) TimerEvent: {}
+[28.590288] (-) TimerEvent: {}
+[28.690565] (-) TimerEvent: {}
+[28.782524] (traffic_map) StdoutLine: {'line': b'[100%] Built target traffic_world_plugin\n'}
+[28.790725] (-) TimerEvent: {}
+[28.802362] (traffic_map) CommandEnded: {'returncode': 0}
+[28.803927] (traffic_map) JobProgress: {'identifier': 'traffic_map', 'progress': 'install'}
+[28.823335] (traffic_map) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/hassan/Desktop/traffic_map/build/traffic_map'], 'cwd': '/home/hassan/Desktop/traffic_map/build/traffic_map', 'env': OrderedDict([('GJS_DEBUG_TOPICS', 'JS ERROR;JS LOG'), ('LESSOPEN', '| /usr/bin/lesspipe %s'), ('VSCODE_CWD', '/home/hassan'), ('VSCODE_ESM_ENTRYPOINT', 'vs/workbench/api/node/extensionHostProcess'), ('CODEX_CI', '1'), ('USER', 'hassan'), ('SNAP_COMMON', '/var/snap/code/common'), ('LC_TIME', 'fr_FR.UTF-8'), ('CODEX_INTERNAL_ORIGINATOR_OVERRIDE', 'codex_vscode'), ('VSCODE_NLS_CONFIG', '{"userLocale":"en-us","osLocale":"en-us","resolvedLanguage":"en","defaultMessagesFile":"/snap/code/258/usr/share/code/resources/app/out/nls.messages.json","locale":"en-us","availableLanguages":{}}'), ('FONTCONFIG_PATH', '/etc/fonts'), ('GIO_MODULE_DIR', '/home/hassan/snap/code/common/.cache/gio-modules'), ('VSCODE_HANDLES_UNCAUGHT_ERRORS', 'true'), ('XDG_SESSION_TYPE', 'wayland'), ('DEBUG', 'release'), ('SNAP_UID', '1000'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/hassan'), ('CHROME_DESKTOP', 'code.desktop'), ('SNAP_LIBRARY_PATH', '/var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32'), ('DESKTOP_SESSION', 'ubuntu'), ('SNAP_USER_DATA', '/home/hassan/snap/code/258'), ('GTK_PATH', '/snap/code/258/usr/lib/x86_64-linux-gnu/gtk-3.0'), ('VSCODE_IPC_HOOK', '/run/user/1000/vscode-a548163b-1.13-main.sock'), ('GTK_IM_MODULE_FILE', '/home/hassan/snap/code/common/.cache/immodules/immodules.cache'), ('GIO_LAUNCHED_DESKTOP_FILE', '/var/lib/snapd/desktop/applications/code_code.desktop'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('PAGER', 'cat'), ('LC_MONETARY', 'fr_FR.UTF-8'), ('MANAGERPID', '1401'), ('LC_CTYPE', 'C.UTF-8'), ('SYSTEMD_EXEC_PID', '1577'), ('IM_CONFIG_CHECK_ENV', '1'), ('NO_COLOR', '1'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('SNAP_REVISION', '258'), ('COLORTERM', ''), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '2226'), ('VSCODE_CRASH_REPORTER_PROCESS_TYPE', 'extensionHost'), ('IM_CONFIG_PHASE', '1'), ('WAYLAND_DISPLAY', 'wayland-0'), ('CODEX_PERMISSION_PROFILE', ':workspace'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'hassan'), ('SNAP_CONTEXT', 'GPmV9Qlcn1E796wdIn3tNR8JshDjwBuE0xHjPj6-8rdAWUajporJ'), ('JOURNAL_STREAM', '8:15625'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_CONFIG_DIRS_VSCODE_SNAP_ORIG', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('XDG_SESSION_CLASS', 'user'), ('SNAP_VERSION', '110a328e'), ('XDG_DATA_DIRS_VSCODE_SNAP_ORIG', '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('RUST_LOG', 'warn'), ('USERNAME', 'hassan'), ('TERM', 'dumb'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('SNAP_INSTANCE_NAME', 'code'), ('FC_FONTATIONS', '1'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/home/hassan/.codex/tmp/arg0/codex-arg0RmHbIi:/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/hassan/.vscode/extensions/openai.chatgpt-26.818.41705-linux-x64/bin/linux-x86_64'), ('SESSION_MANAGER', 'local/hassan-ROG-Strix-G712LV-G712LV:@/tmp/.ICE-unix/1548,unix/hassan-ROG-Strix-G712LV-G712LV:/tmp/.ICE-unix/1548'), ('GTK_EXE_PREFIX', '/snap/code/258/usr'), ('CODEX_SESSION_ID', '01a02c32-6467-7672-b8b5-e9a7b18ee57c'), ('INVOCATION_ID', '6de3b993612849b28959b0336250383c'), ('XDG_MENU_PREFIX', 'gnome-'), ('LC_ADDRESS', 'fr_FR.UTF-8'), ('GNOME_SETUP_DISPLAY', ':1'), ('SNAP_DATA', '/var/snap/code/258'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('GDK_BACKEND', 'x11'), ('DISPLAY', ':0'), ('LOCPATH', '/snap/code/258/usr/lib/locale'), ('CODEX_SANDBOX_NETWORK_DISABLED', '1'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('LC_TELEPHONE', 'fr_FR.UTF-8'), ('XDG_DATA_HOME', '/home/hassan/snap/code/258/.local/share'), ('XMODIFIERS', '@im=ibus'), ('GH_PAGER', 'cat'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/.mutter-Xwaylandauth.FZEIU3'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SNAP_USER_COMMON', '/home/hassan/snap/code/common'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('GSETTINGS_SCHEMA_DIR', '/home/hassan/snap/code/258/.local/share/glib-2.0/schemas'), ('SNAP_ARCH', 'amd64'), ('AMENT_PREFIX_PATH', '/opt/ros/humble'), ('SNAP_COOKIE', 'GPmV9Qlcn1E796wdIn3tNR8JshDjwBuE0xHjPj6-8rdAWUajporJ'), ('SHELL', '/bin/bash'), ('LC_NAME', 'fr_FR.UTF-8'), ('GDK_PIXBUF_MODULEDIR', '/snap/code/258/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders'), ('QT_ACCESSIBILITY', '1'), ('ELECTRON_RUN_AS_NODE', '1'), ('GDMSESSION', 'ubuntu'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('FONTCONFIG_FILE', '/etc/fonts/fonts.conf'), ('SNAP_NAME', 'code'), ('CODEX_THREAD_ID', '01a02c32-6467-7672-b8b5-e9a7b18ee57c'), ('LC_MEASUREMENT', 'fr_FR.UTF-8'), ('GDK_PIXBUF_MODULE_FILE', '/home/hassan/snap/code/common/.cache/gdk-pixbuf-loaders.cache'), ('GJS_DEBUG_OUTPUT', 'stderr'), ('LC_IDENTIFICATION', 'fr_FR.UTF-8'), ('SNAP_LAUNCHER_ARCH_TRIPLET', 'x86_64-linux-gnu'), ('GIT_PAGER', 'cat'), ('QT_IM_MODULE', 'ibus'), ('PWD', '/home/hassan/Desktop/traffic_map/build/traffic_map'), ('VSCODE_CLI', '1'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('SNAP_REAL_HOME', '/home/hassan'), ('VSCODE_CODE_CACHE_PATH', '/home/hassan/.config/Code/CachedData/110a328ea54b42367b803ec53ee0bf52ef26b419'), ('XDG_DATA_DIRS', '/home/hassan/snap/code/258/.local/share:/home/hassan/snap/code/258:/snap/code/258/usr/share:/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('SNAP_EUID', '1000'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('SNAP', '/snap/code/258'), ('LC_NUMERIC', 'fr_FR.UTF-8'), ('LC_PAPER', 'fr_FR.UTF-8'), ('COLCON', '1'), ('ELECTRON_NO_ATTACH_CONSOLE', '1'), ('VSCODE_PID', '2271'), ('CMAKE_PREFIX_PATH', '/opt/ros/humble')]), 'shell': False}
+[28.844802] (traffic_map) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[28.846039] (traffic_map) StdoutLine: {'line': b'-- Execute custom install script\n'}
+[28.847071] (traffic_map) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/lib/traffic_map/road_visualization\n'}
+[28.848234] (traffic_map) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/lib/traffic_map/generate_gazebo_assets\n'}
+[28.848875] (traffic_map) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/lib/traffic_map/convert_glb_to_obj\n'}
+[28.849277] (traffic_map) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/lib/libtraffic_world_plugin.so\n'}
+[28.849664] (traffic_map) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/maps/bjb_sangjani_full.xodr\n'}
+[28.850587] (traffic_map) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/rviz/traffic_map.rviz\n'}
+[28.851444] (traffic_map) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/gazebo/model_database/database.config\n'}
+[28.851919] (traffic_map) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/gazebo/traffic.world\n'}
+[28.852322] (traffic_map) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/ament_index/resource_index/package_run_dependencies/traffic_map\n'}
+[28.852657] (traffic_map) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/ament_index/resource_index/parent_prefix_path/traffic_map\n'}
+[28.853027] (traffic_map) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/environment/ament_prefix_path.sh\n'}
+[28.853373] (traffic_map) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/environment/ament_prefix_path.dsv\n'}
+[28.853723] (traffic_map) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/environment/path.sh\n'}
+[28.854109] (traffic_map) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/environment/path.dsv\n'}
+[28.854535] (traffic_map) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/local_setup.bash\n'}
+[28.856144] (traffic_map) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/local_setup.sh\n'}
+[28.856471] (traffic_map) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/local_setup.zsh\n'}
+[28.857720] (traffic_map) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/local_setup.dsv\n'}
+[28.858806] (traffic_map) StdoutLine: {'line': b'-- Symlinking: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/package.dsv\n'}
+[28.878046] (traffic_map) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/ament_index/resource_index/packages/traffic_map\n'}
+[28.878659] (traffic_map) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/cmake/traffic_mapConfig.cmake\n'}
+[28.879076] (traffic_map) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/cmake/traffic_mapConfig-version.cmake\n'}
+[28.879281] (traffic_map) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/package.xml\n'}
+[28.881830] (traffic_map) CommandEnded: {'returncode': 0}
+[28.890852] (-) TimerEvent: {}
+[28.930907] (traffic_map) JobEnded: {'identifier': 'traffic_map', 'rc': 0}
+[28.932227] (-) EventReactorShutdown: {}

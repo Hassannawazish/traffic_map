@@ -10,16 +10,19 @@
         <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><emissive>0.35 0.35 0.35 1</emissive></material></visual>
       <visual name="yellow_divider"><geometry><mesh><uri>file://ROAD_YELLOW_PATH</uri></mesh></geometry>
         <material><ambient>1 0.72 0 1</ambient><diffuse>1 0.72 0 1</diffuse><emissive>0.3 0.2 0 1</emissive></material></visual>
+      <visual name="roadside_vegetation"><geometry><mesh><uri>file://VEGETATION_PATH</uri></mesh></geometry></visual>
+      <visual name="sidewalks"><geometry><mesh><uri>file://SIDEWALKS_PATH</uri></mesh></geometry>
+        <material><ambient>0.62 0.64 0.66 1</ambient><diffuse>0.62 0.64 0.66 1</diffuse></material></visual>
     </link></model>
     <plugin name="traffic" filename="libtraffic_world_plugin.so"/>
     <gui fullscreen="0">
       <camera name="user_camera">
-        <pose>-10 0 4 0 0.25 0</pose>
+        <pose>-12 0 5 0 0.30 0</pose>
         <track_visual>
           <name>traffic_vehicle_0::body::visual</name>
           <static>false</static>
           <use_model_frame>true</use_model_frame>
-          <xyz>-10 0 4</xyz>
+          <xyz>-12 0 5</xyz>
           <inherit_yaw>true</inherit_yaw>
           <min_dist>4</min_dist>
           <max_dist>60</max_dist>

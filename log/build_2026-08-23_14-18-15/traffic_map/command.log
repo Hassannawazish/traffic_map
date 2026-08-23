@@ -1,0 +1,4 @@
+Invoking command in '/home/hassan/Desktop/traffic_map/build/traffic_map': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hassan/Desktop/traffic_map/build/traffic_map -- -j12 -l12
+Invoked command in '/home/hassan/Desktop/traffic_map/build/traffic_map' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hassan/Desktop/traffic_map/build/traffic_map -- -j12 -l12
+Invoking command in '/home/hassan/Desktop/traffic_map/build/traffic_map': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/hassan/Desktop/traffic_map/build/traffic_map
+Invoked command in '/home/hassan/Desktop/traffic_map/build/traffic_map' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/hassan/Desktop/traffic_map/build/traffic_map

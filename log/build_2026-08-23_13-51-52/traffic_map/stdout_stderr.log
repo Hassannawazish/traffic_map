@@ -1,0 +1,31 @@
+[35m[1mConsolidate compiler generated dependencies of target traffic_world_plugin[0m
+[ 16%] Built target convert_glb_to_obj
+[ 41%] Built target map_parser
+[ 58%] Built target generate_gazebo_assets
+[ 83%] Built target road_visualization
+[100%] Built target traffic_world_plugin
+-- Install configuration: ""
+-- Execute custom install script
+-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/lib/traffic_map/road_visualization
+-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/lib/traffic_map/generate_gazebo_assets
+-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/lib/traffic_map/convert_glb_to_obj
+-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/lib/libtraffic_world_plugin.so
+-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/maps/bjb_sangjani_full.xodr
+-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/rviz/traffic_map.rviz
+-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/gazebo/model_database/database.config
+-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/gazebo/traffic.world
+-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/ament_index/resource_index/package_run_dependencies/traffic_map
+-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/ament_index/resource_index/parent_prefix_path/traffic_map
+-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/environment/ament_prefix_path.sh
+-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/environment/ament_prefix_path.dsv
+-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/environment/path.sh
+-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/environment/path.dsv
+-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/local_setup.bash
+-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/local_setup.sh
+-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/local_setup.zsh
+-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/local_setup.dsv
+-- Symlinking: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/package.dsv
+-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/ament_index/resource_index/packages/traffic_map
+-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/cmake/traffic_mapConfig.cmake
+-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/cmake/traffic_mapConfig-version.cmake
+-- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/package.xml

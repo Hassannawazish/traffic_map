@@ -5,7 +5,7 @@ set(traffic_map_BUILD_DEPENDS "geometry_msgs" "rclcpp" "sensor_msgs" "visualizat
 set(traffic_map_BUILDTOOL_DEPENDS "ament_cmake")
 set(traffic_map_BUILD_EXPORT_DEPENDS "geometry_msgs" "rclcpp" "sensor_msgs" "visualization_msgs" "tf2_ros" "gazebo_dev" "pugixml")
 set(traffic_map_BUILDTOOL_EXPORT_DEPENDS )
-set(traffic_map_EXEC_DEPENDS "geometry_msgs" "rclcpp" "sensor_msgs" "visualization_msgs" "tf2_ros" "gazebo_dev" "pugixml")
+set(traffic_map_EXEC_DEPENDS "gazebo_ros" "geometry_msgs" "rclcpp" "sensor_msgs" "visualization_msgs" "tf2_ros" "gazebo_dev" "pugixml")
 set(traffic_map_TEST_DEPENDS )
 set(traffic_map_GROUP_DEPENDS )
 set(traffic_map_MEMBER_OF_GROUPS )

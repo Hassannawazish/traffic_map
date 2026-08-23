@@ -11,7 +11,7 @@ mkdir -p "${ASSET_DIR}"
 ros2 run traffic_map generate_gazebo_assets "${ASSET_DIR}"
 export TRAFFIC_ROUTE_CSV="${ASSET_DIR}/route.csv"
 SOURCE_CAR_MESH="${TRAFFIC_CAR_MESH:-${PROJECT_DIR}/cars/Audi_Q7_2009.glb}"
-export TRAFFIC_VEHICLE_COUNT="${TRAFFIC_VEHICLE_COUNT:-8}"
+export TRAFFIC_VEHICLE_COUNT="${TRAFFIC_VEHICLE_COUNT:-16}"
 if [[ ! -f "${SOURCE_CAR_MESH}" ]]; then
   echo "Car mesh not found: ${SOURCE_CAR_MESH}" >&2
   exit 1
@@ -24,6 +24,8 @@ WORLD_FILE="${ASSET_DIR}/traffic.world"
 sed -e "s|ROAD_SURFACE_PATH|${ASSET_DIR}/road_surface.obj|g" \
     -e "s|ROAD_WHITE_PATH|${ASSET_DIR}/road_white.obj|g" \
     -e "s|ROAD_YELLOW_PATH|${ASSET_DIR}/road_yellow.obj|g" \
+    -e "s|VEGETATION_PATH|${ASSET_DIR}/vegetation.obj|g" \
+    -e "s|SIDEWALKS_PATH|${ASSET_DIR}/sidewalks.obj|g" \
     "${PROJECT_DIR}/gazebo/traffic.world" > "${WORLD_FILE}"
 export GAZEBO_MODEL_DATABASE_URI="file://${PROJECT_DIR}/gazebo/model_database"
 gzserver --verbose "${WORLD_FILE}" &
