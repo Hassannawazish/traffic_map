@@ -11,7 +11,11 @@ mkdir -p "${ASSET_DIR}"
 ros2 run traffic_map generate_gazebo_assets "${ASSET_DIR}"
 export TRAFFIC_ROUTE_CSV="${ASSET_DIR}/route.csv"
 SOURCE_CAR_MESH="${TRAFFIC_CAR_MESH:-${PROJECT_DIR}/cars/Audi_Q7_2009.glb}"
-export TRAFFIC_VEHICLE_COUNT="${TRAFFIC_VEHICLE_COUNT:-16}"
+export TRAFFIC_VEHICLE_COUNT="${TRAFFIC_VEHICLE_COUNT:-24}"
+export WIND_X_MPS="${WIND_X_MPS:-3.0}"
+export WIND_Y_MPS="${WIND_Y_MPS:-1.0}"
+export VISIBILITY_M="${VISIBILITY_M:-700}"
+export SUN_LEVEL="${SUN_LEVEL:-0.9}"
 if [[ ! -f "${SOURCE_CAR_MESH}" ]]; then
   echo "Car mesh not found: ${SOURCE_CAR_MESH}" >&2
   exit 1
@@ -26,6 +30,11 @@ sed -e "s|ROAD_SURFACE_PATH|${ASSET_DIR}/road_surface.obj|g" \
     -e "s|ROAD_YELLOW_PATH|${ASSET_DIR}/road_yellow.obj|g" \
     -e "s|VEGETATION_PATH|${ASSET_DIR}/vegetation.obj|g" \
     -e "s|SIDEWALKS_PATH|${ASSET_DIR}/sidewalks.obj|g" \
+    -e "s|GUARDRAILS_PATH|${ASSET_DIR}/guardrails.obj|g" \
+    -e "s|WIND_X|${WIND_X_MPS}|g" \
+    -e "s|WIND_Y|${WIND_Y_MPS}|g" \
+    -e "s|FOG_END|${VISIBILITY_M}|g" \
+    -e "s|SUN_LEVEL|${SUN_LEVEL}|g" \
     "${PROJECT_DIR}/gazebo/traffic.world" > "${WORLD_FILE}"
 export GAZEBO_MODEL_DATABASE_URI="file://${PROJECT_DIR}/gazebo/model_database"
 gzserver --verbose "${WORLD_FILE}" &

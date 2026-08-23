@@ -1,8 +1,31 @@
 <?xml version="1.0"?>
 <sdf version="1.6">
   <world name="traffic_world">
-    <scene><ambient>0.55 0.55 0.55 1</ambient><background>0.35 0.55 0.8 1</background></scene>
-    <include><uri>model://sun</uri></include>
+    <gravity>0 0 -9.81</gravity>
+    <wind><linear_velocity>WIND_X WIND_Y 0</linear_velocity></wind>
+    <atmosphere type="adiabatic">
+      <temperature>288.15</temperature><pressure>101325</pressure><temperature_gradient>-0.0065</temperature_gradient>
+    </atmosphere>
+    <scene>
+      <ambient>0.48 0.50 0.54 1</ambient><background>0.35 0.55 0.8 1</background><shadows>true</shadows>
+      <fog><color>0.58 0.66 0.72 1</color><type>linear</type><start>100</start><end>FOG_END</end></fog>
+    </scene>
+    <light name="sun" type="directional">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 100 0 0 0</pose>
+      <diffuse>SUN_LEVEL SUN_LEVEL SUN_LEVEL 1</diffuse><specular>0.25 0.25 0.25 1</specular>
+      <attenuation><range>1000</range><constant>0.9</constant><linear>0.01</linear><quadratic>0.001</quadratic></attenuation>
+      <direction>-0.45 0.25 -0.86</direction>
+    </light>
+    <model name="visible_sun">
+      <static>true</static><pose>220 125 105 0 0 0</pose>
+      <link name="sun_disc">
+        <visual name="disc"><cast_shadows>false</cast_shadows><geometry><sphere><radius>11</radius></sphere></geometry>
+          <material><ambient>1 0.78 0.18 1</ambient><diffuse>1 0.78 0.18 1</diffuse><emissive>1 0.72 0.12 1</emissive></material></visual>
+        <visual name="halo"><cast_shadows>false</cast_shadows><geometry><sphere><radius>15</radius></sphere></geometry>
+          <transparency>0.72</transparency><material><ambient>1 0.75 0.2 .28</ambient><diffuse>1 0.75 0.2 .28</diffuse><emissive>1 0.65 0.1 .28</emissive></material></visual>
+      </link>
+    </model>
     <model name="physics_ground"><static>true</static><link name="ground_link">
       <collision name="ground_collision"><pose>0 0 -0.55 0 0 0</pose><geometry><box><size>50000 50000 1</size></box></geometry>
         <surface><friction><ode><mu>1.0</mu><mu2>1.0</mu2></ode></friction></surface></collision>
@@ -17,6 +40,9 @@
       <visual name="roadside_vegetation"><geometry><mesh><uri>file://VEGETATION_PATH</uri></mesh></geometry></visual>
       <visual name="sidewalks"><geometry><mesh><uri>file://SIDEWALKS_PATH</uri></mesh></geometry>
         <material><ambient>0.62 0.64 0.66 1</ambient><diffuse>0.62 0.64 0.66 1</diffuse></material></visual>
+      <visual name="guardrails"><geometry><mesh><uri>file://GUARDRAILS_PATH</uri></mesh></geometry>
+        <material><ambient>0.55 0.58 0.62 1</ambient><diffuse>0.70 0.73 0.78 1</diffuse></material></visual>
+      <collision name="guardrail_collision"><geometry><mesh><uri>file://GUARDRAILS_PATH</uri></mesh></geometry></collision>
     </link></model>
     <plugin name="traffic" filename="libtraffic_world_plugin.so"/>
     <gui fullscreen="0">

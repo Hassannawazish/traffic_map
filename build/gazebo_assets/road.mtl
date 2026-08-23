@@ -14,3 +14,5 @@ newmtl shrub
 Kd 0.16 0.42 0.08
 newmtl sidewalk
 Kd 0.38 0.39 0.40
+newmtl guardrail
+Kd 0.55 0.58 0.62

@@ -36,6 +36,10 @@ struct ObjWriter {
     for(int i=0;i<sides;++i){const double a=6.283185307179586*i/sides,b=6.283185307179586*(i+1)/sides;
       triangle(x+radius*cos(a),y+radius*sin(a),z,x+radius*cos(b),y+radius*sin(b),z,x,y,z+height);}
   }
+  void wall(double x0,double y0,double x1,double y1,double bottom,double top) {
+    triangle(x0,y0,bottom,x1,y1,bottom,x0,y0,top);triangle(x0,y0,top,x1,y1,bottom,x1,y1,top);
+    triangle(x0,y0,top,x1,y1,bottom,x0,y0,bottom);triangle(x1,y1,top,x1,y1,bottom,x0,y0,top);
+  }
 };
 }
 
@@ -52,10 +56,12 @@ int main(int argc,char **argv) {
   ObjWriter yellow(dir+"/road_yellow.obj");
   ObjWriter vegetation(dir+"/vegetation.obj");
   ObjWriter sidewalks(dir+"/sidewalks.obj");
+  ObjWriter guardrails(dir+"/guardrails.obj");
   std::ofstream mtl(dir+"/road.mtl");
   mtl<<"newmtl asphalt\nKd 0.055 0.06 0.065\nnewmtl white\nKd 0.9 0.9 0.9\nnewmtl yellow\nKd 1.0 0.72 0.0\n"
      <<"newmtl grass\nKd 0.12 0.30 0.07\nnewmtl trunk\nKd 0.24 0.11 0.04\nnewmtl foliage\nKd 0.08 0.34 0.06\nnewmtl shrub\nKd 0.16 0.42 0.08\n";
   mtl<<"newmtl sidewalk\nKd 0.38 0.39 0.40\n";
+  mtl<<"newmtl guardrail\nKd 0.55 0.58 0.62\n";
   const auto &le=left.back(),&re=right.back(); const std::size_t n=samples.size();
   asphalt.out<<"usemtl asphalt\n";
   for(std::size_t i=0;i+1<n;++i)asphalt.quad(le.at("x")[i]-ox,le.at("y")[i]-oy,re.at("x")[i]-ox,re.at("y")[i]-oy,
@@ -67,6 +73,14 @@ int main(int argc,char **argv) {
     if(l+1==lanes.size()){for(std::size_t i=0;i+1<n;++i)white.ribbon(v.at("x")[i]-ox,v.at("y")[i]-oy,v.at("x")[i+1]-ox,v.at("y")[i+1]-oy,.22,.12);}
     else {for(std::size_t i=0;i+2<n;i+=6)white.ribbon(v.at("x")[i]-ox,v.at("y")[i]-oy,v.at("x")[i+2]-ox,v.at("y")[i+2]-oy,.18,.12);}}};
   markings(left); markings(right);
+  guardrails.out<<"usemtl guardrail\n";
+  for(std::size_t i=0;i+1<n;++i){
+    const double tx=samples[i+1].at("x")-samples[i].at("x"),ty=samples[i+1].at("y")-samples[i].at("y"),len=std::hypot(tx,ty);
+    if(len<1e-6)continue;
+    const double nx=-ty/len,ny=tx/len;
+    guardrails.wall(le.at("x")[i]-ox+nx*.18,le.at("y")[i]-oy+ny*.18,le.at("x")[i+1]-ox+nx*.18,le.at("y")[i+1]-oy+ny*.18,.18,.92);
+    guardrails.wall(re.at("x")[i]-ox-nx*.18,re.at("y")[i]-oy-ny*.18,re.at("x")[i+1]-ox-nx*.18,re.at("y")[i+1]-oy-ny*.18,.18,.92);
+  }
   sidewalks.out<<"usemtl sidewalk\n";
   for(std::size_t i=0;i+1<n;++i){
     const double tx=samples[i+1].at("x")-samples[i].at("x"),ty=samples[i+1].at("y")-samples[i].at("y"),len=std::hypot(tx,ty);

@@ -10,13 +10,16 @@ An RViz 2 marker-based visualization is also included as a lightweight alternati
 - Asphalt, solid edge markings, dashed lane markings, and yellow divider
 - Audi Q7 GLB vehicle model converted automatically for Gazebo Classic
 - Red ego vehicle with a chase camera
-- Up to 16 differently colored traffic vehicles
+- 24 differently colored traffic vehicles by default, including opposing traffic
 - Endless traffic recycling ahead of the ego vehicle
-- Lane-aware following, acceleration, braking, and obstacle avoidance
+- Lane-aware following, safe lane changes, acceleration, braking, and obstacle avoidance
+- Timed traffic lights with green, yellow, and red signal compliance
+- Posted 100 km/h speed-limit signs with controller enforcement
 - Dynamic collision bodies with mass, inertia, friction, and crash physics
-- Footpaths, moving pedestrians, grass, shrubs, and roadside trees
+- Footpaths, collidable guard rails, moving pedestrians, grass, shrubs, and roadside trees
+- Configurable sunlight, shadows, atmosphere, fog visibility, gravity, and wind
 - Dashboard RGB camera
-- 360-degree dashboard lidar with a 150 m range
+- 360-degree dashboard lidar with an 80 m range
 - ROS 2 camera and `LaserScan` topics
 
 ## Screenshots
@@ -101,7 +104,7 @@ Select this image topic in `rqt_image_view`:
 The ego dashboard lidar currently has:
 
 - Horizontal FOV: 360 degrees
-- Range: 0.2–150 metres
+- Range: 0.2–80 metres
 - Samples: 1,080 per scan
 - Update rate: 20 Hz
 - Message type: `sensor_msgs/msg/LaserScan`
@@ -130,24 +133,54 @@ ros2 topic list | grep ego
 
 ## Traffic behavior
 
-The ego begins at 20 m/s. Other vehicles use different lower target speeds and spawn ahead across three lanes. Each car monitors its lane and adjusts its speed according to the available distance:
+The ego requests a high cruise speed, but the posted and enforced maximum is 100 km/h (27.78 m/s). Other vehicles use different lower target speeds, vary their cruise speed gradually, and populate both the ego carriageway and opposing road lanes. Every vehicle monitors its lane and adjusts its speed according to the available distance:
 
 - Normal acceleration is limited for smooth speed recovery.
 - Cars reduce speed when approaching slower traffic.
 - Emergency braking is applied at short distances.
+- The ego and surrounding traffic check front and rear gaps in adjacent lanes and change lane when a safe route around slower traffic is available.
+- Lane changes use a gradual lateral transition and a cooldown to prevent rapid lane oscillation.
+- If no adjacent lane has a safe gap, the ego follows and brakes instead of forcing a pass.
+- Traffic lights use a repeating green/yellow/red cycle. All vehicles stop for red, stop for yellow when sufficient braking distance remains, and proceed on green.
+- Circular `100` signs are installed repeatedly along the route, and every vehicle controller clamps its commanded speed to 100 km/h.
 - Vehicles do not intentionally pass through a car in the same lane.
 - Passed vehicles remain behind for at least 100 m before being recycled ahead.
 - If braking is insufficient, route control is released and Gazebo handles the collision using vehicle mass, inertia, momentum, ground contact, and friction.
 
 ## Change the number of vehicles
 
-The default is 16 vehicles, including the ego. Supported values are 1–16:
+The default is 24 vehicles, including the ego. Supported values are 1–32:
 
 ```bash
 TRAFFIC_VEHICLE_COUNT=8 ./run_gazebo.sh
 ```
 
 Fewer vehicles reduce GPU and CPU usage.
+
+## Configure the environment
+
+The Gazebo world includes a visible sun disc and halo, directional sunlight, dynamic shadows, an adiabatic atmosphere, gravity, linear fog, and horizontal wind. Override the defaults when launching:
+
+```bash
+WIND_X_MPS=6.0 \
+WIND_Y_MPS=2.0 \
+VISIBILITY_M=400 \
+SUN_LEVEL=0.75 \
+./run_gazebo.sh
+```
+
+Available settings:
+
+- `WIND_X_MPS`: wind velocity along the world X axis; default `3.0` m/s
+- `WIND_Y_MPS`: wind velocity along the world Y axis; default `1.0` m/s
+- `VISIBILITY_M`: distance at which linear fog becomes opaque; default `700` m
+- `SUN_LEVEL`: RGB brightness of the directional sunlight; default `0.9`
+
+For clear, calm conditions:
+
+```bash
+WIND_X_MPS=0 WIND_Y_MPS=0 VISIBILITY_M=2000 SUN_LEVEL=1.0 ./run_gazebo.sh
+```
 
 ## Use another OpenDRIVE map
 
