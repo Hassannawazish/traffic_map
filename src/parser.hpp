@@ -47,8 +47,7 @@ public:
 void parseLaneSection(pugi::xml_node& lane_section, 
                       std::vector<std::map<std::string, std::string>>& lane_attributes,
                       std::vector<std::map<std::string, std::string>>& lane_dimensions_rm,
-                      std::map<int, std::vector<std::map<std::string, double>>>& lanes_frames, 
-                      int start_id);
+                      std::map<int, std::vector<std::map<std::string, double>>>& lanes_frames);
                   
 void parseLaneSection(pugi::xml_node& lane_section, 
                               std::deque<std::map<std::string, std::string>>& lane_attributes,

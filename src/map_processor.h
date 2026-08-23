@@ -1,13 +1,19 @@
+#pragma once
 #include "parser.hpp"
-#include <cmath>
+#include <map>
+#include <string>
+#include <vector>
 
-const double PI {3.1415926};                                 // DECLARED CONSTANTS  
+using LaneCoordinates = std::map<std::string, std::vector<double>>;
 
 class map_process
 {
 public:
-    std::map< std::string, std::vector<double>> left_lane;
-    std::map< std::string, std::vector<double>> right_lane;
     map_process();
-    std::map< std::string, std::vector<double>> get_lane(int lane_number);
+    const std::vector<LaneCoordinates> &get_left_lanes() const;
+    const std::vector<LaneCoordinates> &get_right_lanes() const;
+
+private:
+    std::vector<LaneCoordinates> left_lanes_;
+    std::vector<LaneCoordinates> right_lanes_;
 };

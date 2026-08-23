@@ -1,157 +1,176 @@
-#include <ros/ros.h>
-#include <visualization_msgs/Marker.h>
-#include <sensor_msgs/CameraInfo.h>
-
-#include <fstream>
+#include <algorithm>
+#include <cmath>
+#include <utility>
+#include <vector>
+#include <geometry_msgs/msg/point.hpp>
+#include <geometry_msgs/msg/transform_stamped.hpp>
+#include <rclcpp/rclcpp.hpp>
+#include <sensor_msgs/msg/camera_info.hpp>
+#include <tf2_ros/transform_broadcaster.h>
+#include <visualization_msgs/msg/marker.hpp>
+#include <visualization_msgs/msg/marker_array.hpp>
+#include "lane.hpp"
 #include "map_processor.h"
 #include "types.h"
-#include "lane.hpp"
-#include <random>
-
 extern const int procs;
-
-int main(int argc, char** argv )
-{  
-  ros::init(argc, argv, "road_visualization");
-  ros::NodeHandle n;
-  ros::Rate r(30);
-  ros::Publisher camera_info_pub = n.advertise<sensor_msgs::CameraInfo>("/camera_info", 1);
-  ros::Publisher marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 10, 0);
-  float f = 0.0;
-  
-  Config::singleton().parse();
-  std::cout<<"Total Number of thread = "<<procs<<std::endl;
-  std::cout<<"lanes = "<<Config::singleton().num_of_lanes<<std::endl;
-  std::cout<<"No. of Geometeries = "<<Config::singleton().num_of_geometeries<<std::endl; 
-  std::cout<<"Road Length = "<<Config::singleton().road_length<<std::endl;
+int main(int argc, char ** argv) {
+  rclcpp::init(argc, argv);
+  auto node = rclcpp::Node::make_shared("road_visualization");
+  auto qos = rclcpp::QoS(rclcpp::KeepLast(10)).transient_local().reliable();
+  auto marker_pub = node->create_publisher<visualization_msgs::msg::Marker>("visualization_marker", qos);
+  auto map_pub = node->create_publisher<visualization_msgs::msg::MarkerArray>("visualization_marker_array", qos);
+  auto camera_pub = node->create_publisher<sensor_msgs::msg::CameraInfo>("camera_info", 1);
+  tf2_ros::TransformBroadcaster tf_broadcaster(node);
+  Config::parse();
+  RCLCPP_INFO(node->get_logger(), "Threads: %d, lanes: %d, geometries: %d, road length: %.2f",
+    procs, Config::singleton().num_of_lanes, Config::singleton().num_of_geometeries, Config::singleton().road_length);
   map_process processed;
-  // std::map< std::string, std::vector<double>> lanes_coords = processed.get_right_lane(1);
-  std::vector< double> x1 =  processed.get_lane(1)["x1"];
-  std::vector< double> y1 =  processed.get_lane(1)["y1"];
-  std::vector< double> x2 =  processed.get_lane(1)["x2"];
-  std::vector< double> y2 =  processed.get_lane(1)["y2"];
-  std::vector< double> x3 =  processed.get_lane(1)["x3"];
-  std::vector< double> y3 =  processed.get_lane(1)["y3"];
-
-  std::vector< double> xr1 =  processed.get_lane(2)["x1"];
-  std::vector< double> yr1 =  processed.get_lane(2)["y1"];
-  std::vector< double> xr2 =  processed.get_lane(2)["x2"];
-  std::vector< double> yr2 =  processed.get_lane(2)["y2"];
-  std::vector< double> xr3 =  processed.get_lane(2)["x3"];
-  std::vector< double> yr3 =  processed.get_lane(2)["y3"];
-  int t=0;
-
-  MapLane Ref_line;
-  SideLane left_lane1, left_lane2, right_lane1, right_lane2;
-  BorderLane left_lane3, right_lane3;
-
-  for (int i = 0; i < Config::singleton().planeview_data.size(); ++i)
-  {
-      geometry_msgs::Point p;
-      std::map<std::string, double> planeview_dat;
-      planeview_dat = Config::singleton().planeview_data[i];
-      p.x = planeview_dat["x"];
-      p.y = planeview_dat["y"];
-      p.z = 0.0;
-      Ref_line.pushback(p);
-      planeview_dat.clear();
+  const auto &left_boundaries = processed.get_left_lanes();
+  const auto &right_boundaries = processed.get_right_lanes();
+  MapLane reference;
+  std::vector<double> route_x, route_y;
+  for (const auto & data : Config::singleton().planeview_data) {
+    geometry_msgs::msg::Point p; p.x=data.at("x"); p.y=data.at("y");
+    p.z=0.15;
+    reference.pushback(p); route_x.push_back(p.x); route_y.push_back(p.y);
   }
-
-  for (int i = 0; i < Config::singleton().planeview_data.size(); ++i)
-  {
-    geometry_msgs::Point pl1, pl2, pl3;
-    #pragma omp critical
-    {
-    pl1.x=x1[i];
-    pl1.y=y1[i];
-    pl1.z=0.0;
-    pl2.x=x2[i];
-    pl2.y=y2[i];
-    pl2.z=0.0;
-    pl3.x=x3[i];
-    pl3.y=y3[i];
-    pl3.z=0.0;
-
-    left_lane1.pushback(pl1);
-    left_lane2.pushback(pl2);
-    left_lane3.pushback(pl3);
+  // Drive through the center of lane -1 instead of on the center divider.
+  if (!right_boundaries.empty()) {
+    const auto &first_lane_edge=right_boundaries.front();
+    const auto count=std::min({route_x.size(),route_y.size(),first_lane_edge.at("x").size(),first_lane_edge.at("y").size()});
+    for (std::size_t i=0; i<count; ++i) {
+      route_x[i]=(route_x[i]+first_lane_edge.at("x")[i])*0.5;
+      route_y[i]=(route_y[i]+first_lane_edge.at("y")[i])*0.5;
     }
   }
-
-  for (int i = 0; i < Config::singleton().planeview_data.size(); ++i)
-  {
-    geometry_msgs::Point pr1, pr2, pr3;
-    #pragma omp critical
-    {
-    pr1.x=xr1[i];
-    pr1.y=yr1[i];
-    pr1.z=0.0;
-    pr2.x=xr2[i];
-    pr2.y=yr2[i];
-    pr2.z=0.0;
-    pr3.x=xr3[i];
-    pr3.y=yr3[i];
-    pr3.z=0.0;
-
-    right_lane1.pushback(pr1);
-    right_lane2.pushback(pr2);
-    right_lane3.pushback(pr3);
+  std::vector<double> route_distance(route_x.size(),0.0);
+  for (std::size_t i=1; i<route_x.size(); ++i) {
+    route_distance[i]=route_distance[i-1]+std::hypot(route_x[i]-route_x[i-1],route_y[i]-route_y[i-1]);
+  }
+  auto route_position = [&](double distance) {
+    if (route_distance.size()<2 || route_distance.back()<=0.0) return std::pair<double,double>{0.0,0.0};
+    distance=std::fmod(distance,route_distance.back());
+    const auto upper=std::upper_bound(route_distance.begin(),route_distance.end(),distance);
+    const std::size_t next=std::min<std::size_t>(std::distance(route_distance.begin(),upper),route_distance.size()-1);
+    const std::size_t previous=next-1;
+    const double segment=route_distance[next]-route_distance[previous];
+    const double ratio=segment>0.0?(distance-route_distance[previous])/segment:0.0;
+    return std::pair<double,double>{route_x[previous]+(route_x[next]-route_x[previous])*ratio,
+      route_y[previous]+(route_y[next]-route_y[previous])*ratio};
+  };
+  std::vector<SideLane> boundary_markers;
+  boundary_markers.reserve(left_boundaries.size() + right_boundaries.size());
+  auto append = [&boundary_markers](const LaneCoordinates &lane, bool solid_edge) {
+    boundary_markers.emplace_back();
+    auto &marker = boundary_markers.back();
+    const auto count = std::min(lane.at("x").size(), lane.at("y").size());
+    if (solid_edge) {
+      marker.line.type=visualization_msgs::msg::Marker::LINE_STRIP;
+      marker.line.scale.x=0.22;
+      for (std::size_t i=0; i<count; ++i) {
+        geometry_msgs::msg::Point point;
+        point.x=lane.at("x")[i]; point.y=lane.at("y")[i]; point.z=0.15;
+        marker.pushback(point);
+      }
+    } else {
+      // LINE_LIST consumes pairs of points. Each pair is a painted dash and
+      // skipped samples form the gap before the next one.
+      for (std::size_t i=0; i+2<count; i += 6) {
+        geometry_msgs::msg::Point start, end;
+        start.x=lane.at("x")[i]; start.y=lane.at("y")[i]; start.z=0.15;
+        end.x=lane.at("x")[i+2]; end.y=lane.at("y")[i+2]; end.z=0.15;
+        marker.pushback(start); marker.pushback(end);
+      }
+    }
+  };
+  for (std::size_t i=0; i<left_boundaries.size(); ++i) append(left_boundaries[i],i+1==left_boundaries.size());
+  for (std::size_t i=0; i<right_boundaries.size(); ++i) append(right_boundaries[i],i+1==right_boundaries.size());
+  visualization_msgs::msg::Marker road_surface;
+  road_surface.header.frame_id="map"; road_surface.ns="road_visualization"; road_surface.id=900;
+  road_surface.type=visualization_msgs::msg::Marker::TRIANGLE_LIST;
+  road_surface.action=visualization_msgs::msg::Marker::ADD; road_surface.pose.orientation.w=1.0;
+  road_surface.scale.x=1.0; road_surface.scale.y=1.0; road_surface.scale.z=1.0;
+  road_surface.color.r=0.12F; road_surface.color.g=0.13F; road_surface.color.b=0.14F; road_surface.color.a=1.0F;
+  if (!left_boundaries.empty() && !right_boundaries.empty()) {
+    const auto &left_edge=left_boundaries.back();
+    const auto &right_edge=right_boundaries.back();
+    const auto count=std::min({left_edge.at("x").size(),left_edge.at("y").size(),
+      right_edge.at("x").size(),right_edge.at("y").size()});
+    for (std::size_t i=0; i+5<count; i += 5) {
+      const std::size_t next=i+5;
+      geometry_msgs::msg::Point l0,l1,r0,r1;
+      l0.x=left_edge.at("x")[i]; l0.y=left_edge.at("y")[i]; l0.z=-0.05;
+      l1.x=left_edge.at("x")[next]; l1.y=left_edge.at("y")[next]; l1.z=-0.05;
+      r0.x=right_edge.at("x")[i]; r0.y=right_edge.at("y")[i]; r0.z=-0.05;
+      r1.x=right_edge.at("x")[next]; r1.y=right_edge.at("y")[next]; r1.z=-0.05;
+      road_surface.points.insert(road_surface.points.end(),{l0,r0,l1,l1,r0,r1});
     }
   }
+  std::vector<visualization_msgs::msg::Marker> lanes={road_surface,reference.get_marker()};
+  for (const auto &boundary : boundary_markers) lanes.push_back(boundary.get_marker());
+  RCLCPP_INFO(node->get_logger(), "Publishing center line and %zu lane boundaries", boundary_markers.size());
+  auto publish_map = [&]() {
+    visualization_msgs::msg::MarkerArray map_message;
+    for (auto &marker : lanes) {
+      marker.header.stamp=node->now();
+      map_message.markers.push_back(marker);
+    }
+    map_pub->publish(map_message);
+  };
+  publish_map();
+  const double vehicle_speed=node->declare_parameter<double>("vehicle_speed_mps",6.0);
+  constexpr double update_rate=60.0;
+  double travelled_distance=0.0;
+  double camera_yaw=0.0;
+  bool camera_yaw_initialized=false;
+  rclcpp::Rate rate(update_rate);
+  while (rclcpp::ok()) {
+    const auto stamp=node->now(); visualization_msgs::msg::Marker vehicle;
+    vehicle.header.stamp=stamp; vehicle.header.frame_id="map"; vehicle.ns="road_visualization"; vehicle.id=1000;
+    vehicle.type=visualization_msgs::msg::Marker::CUBE; vehicle.action=visualization_msgs::msg::Marker::ADD;
+    vehicle.pose.orientation.w=1.0; vehicle.scale.x=4.5; vehicle.scale.y=2.0; vehicle.scale.z=1.5;
+    vehicle.color.r=0.1F; vehicle.color.g=0.4F; vehicle.color.b=1.0F; vehicle.color.a=1.0F;
+    if (route_distance.size()>1 && route_distance.back()>0.0) {
+      const auto position=route_position(travelled_distance);
+      const auto look_ahead=route_position(travelled_distance+10.0);
+      vehicle.pose.position.x=position.first; vehicle.pose.position.y=position.second;
+      vehicle.pose.position.z=0.75;
+      const double yaw=std::atan2(look_ahead.second-position.second,look_ahead.first-position.first);
+      vehicle.pose.orientation.z=std::sin(yaw*0.5);
+      vehicle.pose.orientation.w=std::cos(yaw*0.5);
 
-  marker_pub.publish(Ref_line.get_marker());
-  marker_pub.publish(left_lane1.get_marker());
-  marker_pub.publish(left_lane2.get_marker());
-  marker_pub.publish(left_lane3.get_marker());
-  marker_pub.publish(right_lane1.get_marker());
-  marker_pub.publish(right_lane2.get_marker());
-  marker_pub.publish(right_lane3.get_marker());
+      geometry_msgs::msg::TransformStamped transform;
+      transform.header.stamp=stamp; transform.header.frame_id="map"; transform.child_frame_id="vehicle";
+      transform.transform.translation.x=vehicle.pose.position.x;
+      transform.transform.translation.y=vehicle.pose.position.y;
+      transform.transform.translation.z=vehicle.pose.position.z;
+      transform.transform.rotation=vehicle.pose.orientation;
+      tf_broadcaster.sendTransform(transform);
 
-  while (ros::ok())
-  {
-    visualization_msgs::Marker cube_marker;
-    sensor_msgs::CameraInfo camera_info_msg;
-    cube_marker.header.stamp = camera_info_msg.header.stamp = ros::Time::now();
-    cube_marker.header.frame_id = camera_info_msg.header.frame_id = "map";
-
-    cube_marker.ns = "road_visualization";  
-    cube_marker.type = visualization_msgs::Marker::MESH_RESOURCE;
-    cube_marker.action = visualization_msgs::Marker::ADD; 
-    cube_marker.id = 7;
-
-    camera_info_msg.distortion_model = "equidistant";
-    camera_info_msg.P[3] = 4808.0;  // Set the initial x position
-    camera_info_msg.P[7] = 3099.0;  // Set the initial y position
-    camera_info_msg.P[11] = 0.0; // Set the initial z position
-
-    // Eigen::Quaterniond rotation_quaternion(Eigen::AngleAxisd(M_PI, Eigen::Vector3d::UnitX())); // Example: Rotate around X-axis by pi radians
-    cube_marker.mesh_resource = "file:///home/maanz/Downloads/Audi_Q7_2009.stl";
-    cube_marker.mesh_use_embedded_materials = true;
-    cube_marker.pose.position.x = x1[t];
-    cube_marker.pose.position.y = y1[t];
-    cube_marker.pose.position.z = 0.0;
-    cube_marker.scale.x = 1.0;
-    cube_marker.scale.y = 1.0;
-    cube_marker.scale.z = 1.0;
-
-    // cube_marker.color.r = 1.0;
-    // cube_marker.color.g = 0.0;
-    // cube_marker.color.b = 0.0;
-    // cube_marker.color.a = 1.0;
-
-    cube_marker.pose.orientation.x = 0.0;
-    cube_marker.pose.orientation.y = 0.0;
-    cube_marker.pose.orientation.z = 0.0;
-    cube_marker.pose.orientation.w = 1.0;
-    
-    camera_info_pub.publish(camera_info_msg);
-
-    marker_pub.publish(cube_marker);
-    
-    if (t < x1.size())
-      t++;
-    
-    r.sleep();
-    f+= 0.04;
+      // Smooth only the chase camera heading. The vehicle itself keeps the
+      // exact road heading, while small XODR angle changes no longer shake the
+      // entire rendered scene from frame to frame.
+      if (!camera_yaw_initialized) {
+        camera_yaw=yaw;
+        camera_yaw_initialized=true;
+      } else {
+        const double yaw_error=std::atan2(std::sin(yaw-camera_yaw),std::cos(yaw-camera_yaw));
+        camera_yaw+=0.04*yaw_error;
+      }
+      geometry_msgs::msg::TransformStamped camera_transform;
+      camera_transform.header.stamp=stamp;
+      camera_transform.header.frame_id="map";
+      camera_transform.child_frame_id="camera_follow";
+      camera_transform.transform.translation=transform.transform.translation;
+      camera_transform.transform.rotation.z=std::sin(camera_yaw*0.5);
+      camera_transform.transform.rotation.w=std::cos(camera_yaw*0.5);
+      tf_broadcaster.sendTransform(camera_transform);
+      travelled_distance=std::fmod(travelled_distance+vehicle_speed/update_rate,route_distance.back());
+    }
+    marker_pub->publish(vehicle);
+    sensor_msgs::msg::CameraInfo camera; camera.header.stamp=stamp; camera.header.frame_id="map";
+    camera.distortion_model="equidistant"; camera.p[3]=4808.0; camera.p[7]=3099.0; camera_pub->publish(camera);
+    rclcpp::spin_some(node); rate.sleep();
   }
+  rclcpp::shutdown(); return 0;
 }
