@@ -36,4 +36,7 @@ cleanup() { if [[ -n "${NODE_PID}" ]] && kill -0 "${NODE_PID}" 2>/dev/null; then
 trap cleanup EXIT INT TERM
 ros2 run traffic_map road_visualization --ros-args -p vehicle_speed_mps:="${VEHICLE_SPEED_MPS}" &
 NODE_PID=$!
-rviz2 -d "${PROJECT_DIR}/rviz/traffic_map.rviz"
+# Synchronize RViz with the display refresh to avoid XWayland/OpenGL tearing.
+# The first variable covers NVIDIA and the second covers Mesa/Intel/AMD.
+env __GL_SYNC_TO_VBLANK=1 vblank_mode=1 QT_OPENGL=desktop \
+  rviz2 -d "${PROJECT_DIR}/rviz/traffic_map.rviz"

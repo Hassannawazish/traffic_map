@@ -1,0 +1,2 @@
+/usr/bin/ar qc libmap_parser.a CMakeFiles/map_parser.dir/src/parser.cpp.o CMakeFiles/map_parser.dir/src/map_processor.cpp.o
+/usr/bin/ranlib libmap_parser.a

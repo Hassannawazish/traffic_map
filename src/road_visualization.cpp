@@ -13,6 +13,28 @@
 #include "map_processor.h"
 #include "types.h"
 extern const int procs;
+
+namespace {
+void add_painted_segment(visualization_msgs::msg::Marker &marker, double x0, double y0,
+    double x1, double y1, double width) {
+  const double dx=x1-x0, dy=y1-y0;
+  const double length=std::hypot(dx,dy);
+  if (length<1e-6) return;
+  const double nx=-dy*width/(2.0*length), ny=dx*width/(2.0*length);
+  geometry_msgs::msg::Point a,b,c,d;
+  a.x=x0+nx; a.y=y0+ny; a.z=0.15;
+  b.x=x0-nx; b.y=y0-ny; b.z=0.15;
+  c.x=x1+nx; c.y=y1+ny; c.z=0.15;
+  d.x=x1-nx; d.y=y1-ny; d.z=0.15;
+  marker.points.insert(marker.points.end(),{a,b,c,c,b,d});
+}
+
+void use_painted_geometry(visualization_msgs::msg::Marker &marker) {
+  marker.type=visualization_msgs::msg::Marker::TRIANGLE_LIST;
+  marker.scale.x=1.0; marker.scale.y=1.0; marker.scale.z=1.0;
+}
+}  // namespace
+
 int main(int argc, char ** argv) {
   rclcpp::init(argc, argv);
   auto node = rclcpp::Node::make_shared("road_visualization");
@@ -58,28 +80,29 @@ int main(int argc, char ** argv) {
     return std::pair<double,double>{route_x[previous]+(route_x[next]-route_x[previous])*ratio,
       route_y[previous]+(route_y[next]-route_y[previous])*ratio};
   };
+  const auto center_samples=reference.line.points;
+  reference.line.points.clear();
+  use_painted_geometry(reference.line);
+  for (std::size_t i=0; i+1<center_samples.size(); ++i) {
+    add_painted_segment(reference.line,center_samples[i].x,center_samples[i].y,
+      center_samples[i+1].x,center_samples[i+1].y,0.30);
+  }
   std::vector<SideLane> boundary_markers;
   boundary_markers.reserve(left_boundaries.size() + right_boundaries.size());
   auto append = [&boundary_markers](const LaneCoordinates &lane, bool solid_edge) {
     boundary_markers.emplace_back();
     auto &marker = boundary_markers.back();
+    use_painted_geometry(marker.line);
     const auto count = std::min(lane.at("x").size(), lane.at("y").size());
     if (solid_edge) {
-      marker.line.type=visualization_msgs::msg::Marker::LINE_STRIP;
-      marker.line.scale.x=0.22;
-      for (std::size_t i=0; i<count; ++i) {
-        geometry_msgs::msg::Point point;
-        point.x=lane.at("x")[i]; point.y=lane.at("y")[i]; point.z=0.15;
-        marker.pushback(point);
+      for (std::size_t i=0; i+1<count; ++i) {
+        add_painted_segment(marker.line,lane.at("x")[i],lane.at("y")[i],
+          lane.at("x")[i+1],lane.at("y")[i+1],0.28);
       }
     } else {
-      // LINE_LIST consumes pairs of points. Each pair is a painted dash and
-      // skipped samples form the gap before the next one.
       for (std::size_t i=0; i+2<count; i += 6) {
-        geometry_msgs::msg::Point start, end;
-        start.x=lane.at("x")[i]; start.y=lane.at("y")[i]; start.z=0.15;
-        end.x=lane.at("x")[i+2]; end.y=lane.at("y")[i+2]; end.z=0.15;
-        marker.pushback(start); marker.pushback(end);
+        add_painted_segment(marker.line,lane.at("x")[i],lane.at("y")[i],
+          lane.at("x")[i+2],lane.at("y")[i+2],0.24);
       }
     }
   };
@@ -119,7 +142,7 @@ int main(int argc, char ** argv) {
   };
   publish_map();
   const double vehicle_speed=node->declare_parameter<double>("vehicle_speed_mps",6.0);
-  constexpr double update_rate=60.0;
+  constexpr double update_rate=120.0;
   double travelled_distance=0.0;
   double camera_yaw=0.0;
   bool camera_yaw_initialized=false;
