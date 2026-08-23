@@ -3,6 +3,10 @@
   <world name="traffic_world">
     <scene><ambient>0.55 0.55 0.55 1</ambient><background>0.35 0.55 0.8 1</background></scene>
     <include><uri>model://sun</uri></include>
+    <model name="physics_ground"><static>true</static><link name="ground_link">
+      <collision name="ground_collision"><pose>0 0 -0.55 0 0 0</pose><geometry><box><size>50000 50000 1</size></box></geometry>
+        <surface><friction><ode><mu>1.0</mu><mu2>1.0</mu2></ode></friction></surface></collision>
+    </link></model>
     <model name="road"><static>true</static><link name="road_link">
       <visual name="asphalt"><geometry><mesh><uri>file:///home/hassan/Desktop/traffic_map/build/gazebo_assets/road_surface.obj</uri></mesh></geometry>
         <material><ambient>0.055 0.06 0.065 1</ambient><diffuse>0.055 0.06 0.065 1</diffuse></material></visual>
