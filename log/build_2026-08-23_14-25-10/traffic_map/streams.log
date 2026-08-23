@@ -1,0 +1,35 @@
+[0.039s] Invoking command in '/home/hassan/Desktop/traffic_map/build/traffic_map': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hassan/Desktop/traffic_map/build/traffic_map -- -j12 -l12
+[0.230s] [35m[1mConsolidate compiler generated dependencies of target traffic_world_plugin[0m
+[0.236s] [ 25%] Built target convert_glb_to_obj
+[0.237s] [ 41%] Built target map_parser
+[0.312s] [ 58%] Built target generate_gazebo_assets
+[0.335s] [ 83%] Built target road_visualization
+[0.362s] [100%] Built target traffic_world_plugin
+[0.399s] Invoked command in '/home/hassan/Desktop/traffic_map/build/traffic_map' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hassan/Desktop/traffic_map/build/traffic_map -- -j12 -l12
+[0.434s] Invoking command in '/home/hassan/Desktop/traffic_map/build/traffic_map': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/hassan/Desktop/traffic_map/build/traffic_map
+[0.456s] -- Install configuration: ""
+[0.458s] -- Execute custom install script
+[0.459s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/lib/traffic_map/road_visualization
+[0.461s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/lib/traffic_map/generate_gazebo_assets
+[0.461s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/lib/traffic_map/convert_glb_to_obj
+[0.462s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/lib/libtraffic_world_plugin.so
+[0.462s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/maps/bjb_sangjani_full.xodr
+[0.464s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/rviz/traffic_map.rviz
+[0.465s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/gazebo/model_database/database.config
+[0.465s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/gazebo/traffic.world
+[0.466s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/ament_index/resource_index/package_run_dependencies/traffic_map
+[0.467s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/ament_index/resource_index/parent_prefix_path/traffic_map
+[0.468s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/environment/ament_prefix_path.sh
+[0.468s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/environment/ament_prefix_path.dsv
+[0.469s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/environment/path.sh
+[0.470s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/environment/path.dsv
+[0.470s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/local_setup.bash
+[0.471s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/local_setup.sh
+[0.471s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/local_setup.zsh
+[0.472s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/local_setup.dsv
+[0.473s] -- Symlinking: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/package.dsv
+[0.501s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/ament_index/resource_index/packages/traffic_map
+[0.502s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/cmake/traffic_mapConfig.cmake
+[0.502s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/cmake/traffic_mapConfig-version.cmake
+[0.503s] -- Up-to-date symlink: /home/hassan/Desktop/traffic_map/install/traffic_map/share/traffic_map/package.xml
+[0.509s] Invoked command in '/home/hassan/Desktop/traffic_map/build/traffic_map' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/hassan/Desktop/traffic_map/build/traffic_map

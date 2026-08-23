@@ -1,37 +1,40 @@
-cmake_minimum_required(VERSION 3.20.0)
-project(using_markers)
-
-add_compile_options(-std=c++11)
-
-find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  visualization_msgs
-)
-
-add_library(parser src/parser.hpp src/parser.cpp src/map_processor.h src/map_processor.cpp src/types.h)
+cmake_minimum_required(VERSION 3.8)
+project(traffic_map)
+set(CMAKE_CXX_STANDARD 17)
+add_compile_options(-Wall -Wextra -Wpedantic)
+find_package(ament_cmake REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(visualization_msgs REQUIRED)
 find_package(pugixml REQUIRED)
-
-if(pugixml_FOUND)
-    message("PUGIXML Found...........................!")
-    target_link_libraries(parser pugixml::pugixml)
-else()
-    message("PUGIXML Not Found...........................!")
-endif()
-
 find_package(OpenMP)
+find_package(gazebo REQUIRED)
+find_package(assimp REQUIRED)
+add_library(map_parser src/parser.cpp src/map_processor.cpp)
+target_include_directories(map_parser PUBLIC src)
+target_link_libraries(map_parser pugixml::pugixml)
 if(OpenMP_CXX_FOUND)
-    message("OpenMP Found...........................!")
-    target_link_libraries(parser OpenMP::OpenMP_CXX)
-else()
-    message("OpenMP Not Found...........................!")
+  target_link_libraries(map_parser OpenMP::OpenMP_CXX)
 endif()
-
-include_directories(
-  ${catkin_INCLUDE_DIRS}
-)
-
-add_executable(road_visualization src/road_visualization.cpp src/lane.hpp src/lane.cpp)
-
- target_link_libraries(road_visualization parser
-   ${catkin_LIBRARIES}
- )
+add_executable(road_visualization src/road_visualization.cpp src/lane.cpp)
+target_include_directories(road_visualization PRIVATE src)
+target_link_libraries(road_visualization map_parser)
+ament_target_dependencies(road_visualization geometry_msgs rclcpp sensor_msgs tf2_ros visualization_msgs)
+add_executable(generate_gazebo_assets src/generate_gazebo_assets.cpp)
+target_include_directories(generate_gazebo_assets PRIVATE src)
+target_link_libraries(generate_gazebo_assets map_parser)
+add_executable(convert_glb_to_obj src/convert_glb_to_obj.cpp)
+target_link_libraries(convert_glb_to_obj assimp::assimp)
+add_library(traffic_world_plugin SHARED src/traffic_world_plugin.cpp)
+target_include_directories(traffic_world_plugin PRIVATE ${GAZEBO_INCLUDE_DIRS})
+target_link_libraries(traffic_world_plugin ${GAZEBO_LIBRARIES})
+install(TARGETS road_visualization DESTINATION lib/${PROJECT_NAME})
+install(TARGETS generate_gazebo_assets convert_glb_to_obj traffic_world_plugin
+  RUNTIME DESTINATION lib/${PROJECT_NAME}
+  LIBRARY DESTINATION lib)
+install(FILES src/bjb_sangjani_full.xodr DESTINATION share/${PROJECT_NAME}/maps)
+install(DIRECTORY rviz DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY gazebo DESTINATION share/${PROJECT_NAME})
+ament_package()

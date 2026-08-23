@@ -1,0 +1,120 @@
+# File produced by Open Asset Import Library (http://www.assimp.sf.net)
+# (assimp v5.2.0)
+
+newmtl licensePlate_AAI_0
+Kd 1 1 1
+Ke 0 0 0
+d 1
+illum 1
+map_Kd Audi_Q7_2009_texture_0.jpg
+bump Audi_Q7_2009_texture_2.jpg
+map_bump Audi_Q7_2009_texture_2.jpg
+
+newmtl licensePlate_AAI_0
+Kd 1 1 1
+Ke 0 0 0
+d 1
+illum 1
+map_Kd Audi_Q7_2009_texture_0.jpg
+bump Audi_Q7_2009_texture_2.jpg
+map_bump Audi_Q7_2009_texture_2.jpg
+
+newmtl Audi_Q7_2009_exterior_0
+Kd 1 1 1
+Ke 0 0 0
+d 1
+illum 1
+map_Kd Audi_Q7_2009_texture_3.png
+bump Audi_Q7_2009_texture_5.jpg
+map_bump Audi_Q7_2009_texture_5.jpg
+
+newmtl Audi_Q7_2009_exterior_0
+Kd 1 1 1
+Ke 0 0 0
+d 1
+illum 1
+map_Kd Audi_Q7_2009_texture_3.png
+bump Audi_Q7_2009_texture_5.jpg
+map_bump Audi_Q7_2009_texture_5.jpg
+
+newmtl Audi_Q7_2009_exterior_0
+Kd 1 1 1
+Ke 0 0 0
+d 1
+illum 1
+map_Kd Audi_Q7_2009_texture_3.png
+bump Audi_Q7_2009_texture_5.jpg
+map_bump Audi_Q7_2009_texture_5.jpg
+
+newmtl Audi_Q7_2009_CarPaint_0
+Kd 1 1 1
+Ke 0 0 0
+d 1
+illum 1
+
+newmtl Audi_Q7_2009_exterior_1
+Kd 1 1 1
+Ke 0 0 0
+d 1
+illum 1
+map_Kd Audi_Q7_2009_texture_3.png
+bump Audi_Q7_2009_texture_5.jpg
+map_bump Audi_Q7_2009_texture_5.jpg
+
+newmtl Transparent_Glass
+Kd 0 0 0
+Ke 0 0 0
+d 0
+illum 1
+
+newmtl Audi_Q7_2009_lights_3
+Kd 1 1 1
+Ke 0 0 0
+d 1
+illum 1
+map_Kd Audi_Q7_2009_texture_6.png
+bump Audi_Q7_2009_texture_8.jpg
+map_bump Audi_Q7_2009_texture_8.jpg
+
+newmtl Audi_Q7_2009_exterior_0
+Kd 1 1 1
+Ke 0 0 0
+d 1
+illum 1
+map_Kd Audi_Q7_2009_texture_3.png
+bump Audi_Q7_2009_texture_5.jpg
+map_bump Audi_Q7_2009_texture_5.jpg
+
+newmtl Audi_Q7_2009_exterior_0
+Kd 1 1 1
+Ke 0 0 0
+d 1
+illum 1
+map_Kd Audi_Q7_2009_texture_3.png
+bump Audi_Q7_2009_texture_5.jpg
+map_bump Audi_Q7_2009_texture_5.jpg
+
+newmtl Audi_Q7_2009_exterior_0
+Kd 1 1 1
+Ke 0 0 0
+d 1
+illum 1
+map_Kd Audi_Q7_2009_texture_3.png
+bump Audi_Q7_2009_texture_5.jpg
+map_bump Audi_Q7_2009_texture_5.jpg
+
+newmtl Audi_Q7_2009_exterior_0
+Kd 1 1 1
+Ke 0 0 0
+d 1
+illum 1
+map_Kd Audi_Q7_2009_texture_3.png
+bump Audi_Q7_2009_texture_5.jpg
+map_bump Audi_Q7_2009_texture_5.jpg
+
+newmtl $Material_13
+Kd 1 1 1
+Ke 0 0 0
+d 1
+illum 1
+

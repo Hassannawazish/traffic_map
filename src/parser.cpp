@@ -55,12 +55,12 @@ void Config::parse() {
                 for (pugi::xml_node lane_section = grand_child.first_child(); lane_section; lane_section = lane_section.next_sibling()) {
                     std::string lane_position = lane_section.name();
                     if (lane_position == "left") {
-                        config.parseLaneSection(lane_section, config.left_lane_attributes, config.left_lane_dimensions_rm, config.left_lanes_frames, 4);
+                        config.parseLaneSection(lane_section, config.left_lane_attributes, config.left_lane_dimensions_rm, config.left_lanes_frames);
                         config.number_of_left_lanes = config.left_lanes_frames.size();
                     } else if (lane_position == "center") {
                         config.parseLaneSection(lane_section, config.center_lane_attributes, config.center_lane_dimensions_rm);
                     } else if (lane_position == "right") {
-                        config.parseLaneSection(lane_section, config.right_lane_attributes, config.right_lane_dimensions_rm, config.right_lanes_frames, 1);
+                        config.parseLaneSection(lane_section, config.right_lane_attributes, config.right_lane_dimensions_rm, config.right_lanes_frames);
                         config.number_of_right_lanes = config.right_lanes_frames.size();
                     }
                 }
@@ -78,8 +78,7 @@ void Config::parse() {
 void Config::parseLaneSection(pugi::xml_node& lane_section, 
                               std::vector<std::map<std::string, std::string>>& lane_attributes,
                               std::vector<std::map<std::string, std::string>>& lane_dimensions_rm,
-                              std::map<int, std::vector<std::map<std::string, double>>>& lanes_frames, 
-                              int start_id) {
+                              std::map<int, std::vector<std::map<std::string, double>>>& lanes_frames) {
     for (pugi::xml_node lane = lane_section.first_child(); lane; lane = lane.next_sibling()) {
         config.num_of_lanes++;
         std::map<std::string, std::string> attributes;
@@ -105,8 +104,8 @@ void Config::parseLaneSection(pugi::xml_node& lane_section,
                 lane_dimensions_rm.push_back(dimensions);
             }
         }
-        lanes_frames.emplace(start_id, width_tags);
-        start_id--;
+        const int lane_id = std::stoi(attributes.at("id"));
+        lanes_frames[lane_id] = width_tags;
     }
 }
 

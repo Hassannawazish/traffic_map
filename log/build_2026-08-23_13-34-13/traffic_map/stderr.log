@@ -1,0 +1,13 @@
+/home/hassan/Desktop/traffic_map/src/generate_gazebo_assets.cpp: In function ‘int main(int, char**)’:
+/home/hassan/Desktop/traffic_map/src/generate_gazebo_assets.cpp:67:5: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+   67 |     if(len<1e-6)continue;const double nx=-ty/len,ny=tx/len;
+      |     ^~
+/home/hassan/Desktop/traffic_map/src/generate_gazebo_assets.cpp:67:26: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+   67 |     if(len<1e-6)continue;const double nx=-ty/len,ny=tx/len;
+      |                          ^~~~~
+/home/hassan/Desktop/traffic_map/src/generate_gazebo_assets.cpp:75:5: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+   75 |     if(len<1e-6)continue;const double nx=-ty/len,ny=tx/len;
+      |     ^~
+/home/hassan/Desktop/traffic_map/src/generate_gazebo_assets.cpp:75:26: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+   75 |     if(len<1e-6)continue;const double nx=-ty/len,ny=tx/len;
+      |                          ^~~~~
