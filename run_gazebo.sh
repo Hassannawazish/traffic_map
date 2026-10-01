@@ -37,6 +37,24 @@ sed -e "s|ROAD_SURFACE_PATH|${ASSET_DIR}/road_surface.obj|g" \
     -e "s|SUN_LEVEL|${SUN_LEVEL}|g" \
     "${PROJECT_DIR}/gazebo/traffic.world" > "${WORLD_FILE}"
 export GAZEBO_MODEL_DATABASE_URI="file://${PROJECT_DIR}/gazebo/model_database"
+
+# Each gzserver needs its own Gazebo master TCP port. If the caller did not
+# explicitly select one, find a free local port so an older or separate Gazebo
+# session cannot prevent this simulation from starting.
+if [[ -z "${GAZEBO_MASTER_URI:-}" ]]; then
+  for candidate_port in $(seq 11345 11445); do
+    if ! (exec 3<>"/dev/tcp/127.0.0.1/${candidate_port}") 2>/dev/null; then
+      export GAZEBO_MASTER_URI="http://127.0.0.1:${candidate_port}"
+      break
+    fi
+  done
+  if [[ -z "${GAZEBO_MASTER_URI:-}" ]]; then
+    echo "No free Gazebo master port was found between 11345 and 11445." >&2
+    exit 1
+  fi
+fi
+echo "Using Gazebo master: ${GAZEBO_MASTER_URI}"
+
 gzserver --verbose "${WORLD_FILE}" &
 GAZEBO_SERVER_PID=$!
 cleanup_gazebo() {

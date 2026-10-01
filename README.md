@@ -13,6 +13,7 @@ An RViz 2 marker-based visualization is also included as a lightweight alternati
 - 24 differently colored traffic vehicles by default, including opposing traffic
 - Endless traffic recycling ahead of the ego vehicle
 - Lane-aware following, safe lane changes, acceleration, braking, and obstacle avoidance
+- Ego D* Lite path planning with minimum-jerk lane-change trajectories
 - Timed traffic lights with green, yellow, and red signal compliance
 - Posted 100 km/h speed-limit signs with controller enforcement
 - Dynamic collision bodies with mass, inertia, friction, and crash physics
@@ -20,7 +21,8 @@ An RViz 2 marker-based visualization is also included as a lightweight alternati
 - Configurable sunlight, shadows, atmosphere, fog visibility, gravity, and wind
 - Dashboard RGB camera
 - 360-degree dashboard lidar with an 80 m range
-- ROS 2 camera and `LaserScan` topics
+- Front bumper sonar with an 8 m range
+- ROS 2 camera, `LaserScan`, and `Range` topics
 
 ## Screenshots
 
@@ -125,6 +127,31 @@ Check its publication rate:
 ros2 topic hz /ego/dashboard_lidar/scan
 ```
 
+## Inspect the front sonar
+
+The ego vehicle has a front-bumper sonar with a 30-degree horizontal cone,
+an 8 m maximum range, and a 20 Hz update rate. It publishes
+`sensor_msgs/msg/Range` on:
+
+Five red emissive guide lines show the sonar coverage fan in Gazebo. These
+lines are visual aids; the measured range still comes from the full ray cone.
+
+```text
+/ego/front_sonar/range
+```
+
+Display live distance measurements with:
+
+```bash
+ros2 topic echo /ego/front_sonar/range
+```
+
+Check its update rate with:
+
+```bash
+ros2 topic hz /ego/front_sonar/range
+```
+
 List all ego sensor topics:
 
 ```bash
@@ -146,6 +173,17 @@ The ego requests a high cruise speed, but the posted and enforced maximum is 100
 - Vehicles do not intentionally pass through a car in the same lane.
 - Passed vehicles remain behind for at least 100 m before being recycled ahead.
 - If braking is insufficient, route control is released and Gazebo handles the collision using vehicle mass, inertia, momentum, ground contact, and friction.
+
+### Ego path planning
+
+The ego vehicle uses D* Lite on a rolling three-lane graph covering 300 m in
+front of the car. Nearby vehicles and non-green traffic lights update the
+graph costs every 0.4 seconds. The planner selects a collision-free lane path,
+then a quintic minimum-jerk profile converts a lane change into smooth lateral
+motion with continuous velocity and acceleration. Front and rear safety gaps
+are checked before the maneuver begins. Longitudinal acceleration and braking
+remain under the traffic controller, while surrounding vehicles retain the
+lighter lane-following controller to avoid unnecessary CPU load.
 
 ## Change the number of vehicles
 
@@ -252,6 +290,7 @@ Record the lidar and dashboard camera:
 ```bash
 ros2 bag record \
   /ego/dashboard_lidar/scan \
+  /ego/front_sonar/range \
   /ego/dashboard_camera/image_raw \
   /ego/dashboard_camera/camera_info
 ```
@@ -301,6 +340,29 @@ TRAFFIC_VEHICLE_COUNT=6 ./run_gazebo.sh
 ```
 
 Close RViz and other GPU-intensive applications while Gazebo is running.
+
+### Gazebo says `Address already in use`
+
+`run_gazebo.sh` automatically selects a free Gazebo master port, so another
+Gazebo session can remain open. Close all terminals that are running an older
+copy of the launcher and start it again:
+
+```bash
+./run_gazebo.sh
+```
+
+To use a specific port instead, set `GAZEBO_MASTER_URI` explicitly:
+
+```bash
+GAZEBO_MASTER_URI=http://127.0.0.1:11346 ./run_gazebo.sh
+```
+
+If you want to stop every Gazebo Classic session owned by your user first:
+
+```bash
+pkill -TERM -x gzclient || true
+pkill -TERM -x gzserver || true
+```
 
 ### Model database warning
 

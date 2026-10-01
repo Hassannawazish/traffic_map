@@ -2,6 +2,7 @@
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
 #include <ignition/math/Pose3.hh>
+#include "dstar_lite.hpp"
 #include <algorithm>
 #include <array>
 #include <cmath>
@@ -18,6 +19,11 @@ class TrafficWorldPlugin : public WorldPlugin {
   std::vector<double> lane_change_cooldown_;
   std::vector<double> signal_distance_,signal_yaw_;
   std::vector<double> pedestrian_distance_,pedestrian_speed_,pedestrian_direction_,pedestrian_lateral_;
+  traffic_map::DStarLite ego_planner_;
+  double next_ego_plan_time_{0.},ego_change_started_{0.},ego_change_duration_{3.2};
+  double ego_change_from_{0.},ego_change_to_{0.},ego_lateral_velocity_{0.};
+  std::size_t ego_change_source_lane_{0},ego_change_target_lane_{0};
+  bool ego_lane_change_active_{false};
   ignition::math::Vector2d sample(double s) const {s=std::fmod(s,arc_.back());if(s<0)s+=arc_.back();auto it=std::upper_bound(arc_.begin(),arc_.end(),s);
     std::size_t b=std::min<std::size_t>(std::distance(arc_.begin(),it),arc_.size()-1),a=b-1; double t=(s-arc_[a])/(arc_[b]-arc_[a]); return route_[a]+(route_[b]-route_[a])*t;}
  public:void Load(physics::WorldPtr world,sdf::ElementPtr) override {world_=world; const char *path=std::getenv("TRAFFIC_ROUTE_CSV"); if(!path)return;
@@ -54,7 +60,19 @@ class TrafficWorldPlugin : public WorldPlugin {
       if(i==0){
         sdf<<"<visual name='dashboard_sensor_housing'><pose>1.15 0 .72 0 0 0</pose><geometry><box><size>.16 .32 .12</size></box></geometry>"
           <<"<material><ambient>.03 .03 .03 1</ambient><diffuse>.06 .06 .06 1</diffuse></material></visual>"
-          <<"<sensor name='dashboard_lidar' type='ray'><pose>2.75 0 .72 0 0 0</pose><always_on>true</always_on><visualize>true</visualize><update_rate>20</update_rate>"
+          <<"<visual name='front_sonar_housing'><pose>2.27 0 -.28 0 1.570796 0</pose><geometry><cylinder><radius>.09</radius><length>.06</length></cylinder></geometry>"
+          <<"<material><ambient>.08 .08 .09 1</ambient><diffuse>.16 .16 .18 1</diffuse></material></visual>"
+          <<"<sensor name='front_sonar' type='ray'><pose>2.32 0 -.28 0 0 0</pose><always_on>true</always_on><visualize>false</visualize><update_rate>20</update_rate>"
+          <<"<ray><scan><horizontal><samples>21</samples><resolution>1</resolution><min_angle>-.261799</min_angle><max_angle>.261799</max_angle></horizontal>"
+          <<"<vertical><samples>7</samples><resolution>1</resolution><min_angle>-.130900</min_angle><max_angle>.130900</max_angle></vertical></scan>"
+          <<"<range><min>.12</min><max>8.0</max><resolution>.01</resolution></range><noise><type>gaussian</type><mean>0</mean><stddev>.015</stddev></noise></ray>"
+          <<"<plugin name='front_sonar_ros' filename='libgazebo_ros_ray_sensor.so'><ros><namespace>/ego/front_sonar</namespace><remapping>~/out:=range</remapping></ros>"
+          <<"<output_type>sensor_msgs/Range</output_type><frame_name>front_sonar</frame_name></plugin></sensor>";
+        for(int ray=0;ray<5;++ray){const double angle=-.261799+ray*.1308995;
+          sdf<<"<visual name='front_sonar_red_ray_"<<ray<<"'><pose>"<<2.32+4.*std::cos(angle)<<" "<<4.*std::sin(angle)<<" -.28 0 0 "<<angle<<"</pose>"
+            <<"<geometry><box><size>8 .025 .025</size></box></geometry><transparency>.18</transparency>"
+            <<"<material><ambient>1 0 0 .82</ambient><diffuse>1 0 0 .82</diffuse><emissive>1 0 0 .82</emissive></material></visual>";}
+        sdf<<"<sensor name='dashboard_lidar' type='ray'><pose>2.75 0 .72 0 0 0</pose><always_on>true</always_on><visualize>true</visualize><update_rate>20</update_rate>"
           <<"<ray><scan><horizontal><samples>1080</samples><resolution>1</resolution><min_angle>-3.14159265</min_angle><max_angle>3.14159265</max_angle></horizontal></scan>"
           <<"<range><min>.20</min><max>80</max><resolution>.02</resolution></range><noise><type>gaussian</type><mean>0</mean><stddev>.01</stddev></noise></ray>"
           <<"<plugin name='dashboard_lidar_ros' filename='libgazebo_ros_ray_sensor.so'><ros><namespace>/ego/dashboard_lidar</namespace><remapping>~/out:=scan</remapping></ros>"
@@ -109,11 +127,46 @@ class TrafficWorldPlugin : public WorldPlugin {
     }
     last_=world_->SimTime();update_=event::Events::ConnectWorldUpdateBegin(std::bind(&TrafficWorldPlugin::OnUpdate,this));}
   void OnUpdate(){auto now=world_->SimTime();double dt=(now-last_).Double();if(dt<1.0/120.0)return;last_=now;
+    const double sim_time=now.Double();
+    if(ego_lane_change_active_){
+      const double t=std::clamp((sim_time-ego_change_started_)/ego_change_duration_,0.,1.);
+      const double blend=t*t*t*(10.+t*(-15.+6.*t));
+      lateral_[0]=ego_change_from_+(ego_change_to_-ego_change_from_)*blend;
+      ego_lateral_velocity_=(ego_change_to_-ego_change_from_)*30.*t*t*(1.-t)*(1.-t)/ego_change_duration_;
+      if(t>=1.){ego_lane_change_active_=false;ego_lateral_velocity_=0.;lane_[0]=ego_change_target_lane_;lateral_[0]=ego_change_to_;target_lateral_[0]=ego_change_to_;lane_change_cooldown_[0]=1.5;}
+    }else ego_lateral_velocity_=0.;
+    if(!ego_lane_change_active_&&lane_change_cooldown_[0]<=0.&&sim_time>=next_ego_plan_time_){
+      constexpr std::size_t planning_lanes=3,planning_steps=61;constexpr double cell_length=5.;
+      std::vector<bool> blocked(planning_lanes*planning_steps,false);
+      for(std::size_t j=1;j<distance_.size();++j){if(crashed_[j]||direction_[j]<0.||lane_[j]>=planning_lanes)continue;
+        const double gap=std::fmod(distance_[j]-distance_[0]+arc_.back(),arc_.back());if(gap>=cell_length*planning_steps)continue;
+        const std::size_t obstacle_step=std::min<std::size_t>(planning_steps-1,static_cast<std::size_t>(gap/cell_length));
+        const std::size_t first=gap<110.?1:(obstacle_step>3?obstacle_step-3:1),last=std::min(planning_steps-1,obstacle_step+2);
+        for(std::size_t step=first;step<=last;++step)blocked[step*planning_lanes+lane_[j]]=true;
+      }
+      for(std::size_t signal=0;signal<signal_distance_.size();++signal){const double phase=std::fmod(sim_time+signal*7.,27.);if(phase<12.)continue;
+        const double gap=std::fmod(signal_distance_[signal]-distance_[0]+arc_.back(),arc_.back());if(gap>=cell_length*planning_steps)continue;
+        const std::size_t signal_step=std::min<std::size_t>(planning_steps-1,static_cast<std::size_t>(gap/cell_length));
+        for(std::size_t step=signal_step>2?signal_step-2:1;step<=std::min(planning_steps-1,signal_step+1);++step)
+          for(std::size_t lane=0;lane<planning_lanes;++lane)blocked[step*planning_lanes+lane]=true;
+      }
+      const auto plan=ego_planner_.Plan(planning_lanes,planning_steps,lane_[0],lane_[0],blocked);
+      std::size_t requested_lane=lane_[0];for(const auto planned_lane:plan)if(planned_lane!=lane_[0]){requested_lane=planned_lane;break;}
+      if(requested_lane!=lane_[0]){double front=arc_.back(),rear=arc_.back();
+        for(std::size_t j=1;j<distance_.size();++j){if(crashed_[j]||direction_[j]<0.||lane_[j]!=requested_lane)continue;
+          front=std::min(front,std::fmod(distance_[j]-distance_[0]+arc_.back(),arc_.back()));
+          rear=std::min(rear,std::fmod(distance_[0]-distance_[j]+arc_.back(),arc_.back()));}
+        if(front>40.&&rear>28.){ego_change_source_lane_=lane_[0];ego_change_target_lane_=requested_lane;
+          ego_change_from_=lateral_[0];ego_change_to_=3.2*requested_lane;ego_change_started_=sim_time;
+          ego_change_duration_=std::clamp(4.2-speed_[0]*.035,2.8,3.8);ego_lane_change_active_=true;}}
+      next_ego_plan_time_=sim_time+.4;
+    }
     for(std::size_t i=0;i<distance_.size();++i){
       lane_change_cooldown_[i]=std::max(0.,lane_change_cooldown_[i]-dt);
-      if(crashed_[i]||lane_change_cooldown_[i]>0)continue;
+      if(i==0||crashed_[i]||lane_change_cooldown_[i]>0)continue;
       auto gaps=[&](std::size_t candidate){double front=arc_.back(),rear=arc_.back();
-        for(std::size_t j=0;j<distance_.size();++j){if(i==j||crashed_[j]||lane_[j]!=candidate||direction_[i]!=direction_[j])continue;
+        for(std::size_t j=0;j<distance_.size();++j){const bool in_candidate=lane_[j]==candidate||(j==0&&ego_lane_change_active_&&(ego_change_source_lane_==candidate||ego_change_target_lane_==candidate));
+          if(i==j||crashed_[j]||!in_candidate||direction_[i]!=direction_[j])continue;
           front=std::min(front,std::fmod(direction_[i]*(distance_[j]-distance_[i])+arc_.back(),arc_.back()));
           rear=std::min(rear,std::fmod(direction_[i]*(distance_[i]-distance_[j])+arc_.back(),arc_.back()));}
         return std::array<double,2>{{front,rear}};};
@@ -125,10 +178,12 @@ class TrafficWorldPlugin : public WorldPlugin {
           if(gap[0]>safe_front&&gap[1]>safe_rear&&gap[0]>best_front+10.){best=candidate;best_front=gap[0];}}
         if(best!=lane_[i]){lane_[i]=best;target_lateral_[i]=direction_[i]>0?3.2*best:-3.2*(best-2);lane_change_cooldown_[i]=4.+.15*i;}}
     }
-    for(std::size_t i=0;i<lateral_.size();++i)lateral_[i]+=std::clamp(target_lateral_[i]-lateral_[i],-1.35*dt,1.35*dt);
+    for(std::size_t i=1;i<lateral_.size();++i)lateral_[i]+=std::clamp(target_lateral_[i]-lateral_[i],-1.35*dt,1.35*dt);
     constexpr double speed_limit=100./3.6;
     for(std::size_t i=0;i<distance_.size();++i){if(crashed_[i])continue;double target=std::min(speed_limit,desired_speed_[i]+(i==0?0.:1.8*std::sin(now.Double()*.12+i)));
-      for(std::size_t j=0;j<distance_.size();++j){if(i==j||crashed_[j]||lane_[i]!=lane_[j]||direction_[i]!=direction_[j])continue;
+      for(std::size_t j=0;j<distance_.size();++j){if(i==j||crashed_[j]||direction_[i]!=direction_[j])continue;
+        const auto occupies_lane=[&](std::size_t vehicle,std::size_t lane){return lane_[vehicle]==lane||(vehicle==0&&ego_lane_change_active_&&(ego_change_source_lane_==lane||ego_change_target_lane_==lane));};
+        if(!occupies_lane(i,lane_[j])&&!occupies_lane(j,lane_[i]))continue;
         double gap=std::fmod(direction_[i]*(distance_[j]-distance_[i])+arc_.back(),arc_.back());
         if(gap<95.)target=std::min(target,std::max(0.,(gap-10.)*.48));
         if(gap<4.7){crashed_[i]=true;crashed_[j]=true;}}
@@ -146,6 +201,7 @@ class TrafficWorldPlugin : public WorldPlugin {
       auto p=sample(distance_[i]),route_q=sample(distance_[i]+8),travel_q=sample(distance_[i]+direction_[i]*8);
       double route_yaw=std::atan2(route_q.Y()-p.Y(),route_q.X()-p.X());
       double yaw=std::atan2(travel_q.Y()-p.Y(),travel_q.X()-p.X());
+      if(i==0&&ego_lane_change_active_)yaw-=std::atan2(ego_lateral_velocity_,std::max(1.,speed_[0]));
       model->SetWorldPose({p.X()+std::sin(route_yaw)*lateral_[i],p.Y()-std::cos(route_yaw)*lateral_[i],.75,0,0,yaw});
       distance_[i]=std::fmod(distance_[i]+direction_[i]*speed_[i]*dt,arc_.back());if(distance_[i]<0)distance_[i]+=arc_.back();}
     if(auto ego=world_->ModelByName("traffic_vehicle_0")){if(auto sun=world_->ModelByName("visible_sun")){
