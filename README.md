@@ -1,6 +1,6 @@
 # Traffic Map — ROS 2 OpenDRIVE Simulation
 
-This project loads an OpenDRIVE (`.xodr`) map and visualizes it with ROS 2 Humble. The primary Gazebo simulation provides a game-style ego-car view, multi-lane traffic, pedestrians, roadside scenery, lidar, a dashboard camera, obstacle avoidance, braking, and physical crash behavior.
+This project loads an OpenDRIVE (`.xodr`) map and visualizes it with ROS 2 Humble. The primary Gazebo simulation provides a game-style ego-car view, multi-lane traffic, pedestrians, roadside scenery, lidar, radar, sonar, a dashboard camera, adverse-weather sensor simulation, obstacle avoidance, braking, and physical crash behavior.
 
 An RViz 2 marker-based visualization is also included as a lightweight alternative.
 
@@ -21,8 +21,10 @@ An RViz 2 marker-based visualization is also included as a lightweight alternati
 - Configurable sunlight, shadows, atmosphere, fog visibility, gravity, and wind
 - Dashboard RGB camera
 - 360-degree dashboard lidar with an 80 m range
+- GPU front-radar approximation with a 120 m range and 90-degree FOV
 - Front bumper sonar with an 8 m range
-- ROS 2 camera, `LaserScan`, and `Range` topics
+- Ego-following fog particles with physics-based camera, lidar, and radar degradation
+- ROS 2 camera, `LaserScan`, `PointCloud2`, and `Range` topics
 
 ## Screenshots
 
@@ -80,7 +82,8 @@ The script automatically:
 4. Generates the road, markings, footpaths, and vegetation meshes.
 5. Converts `cars/Audi_Q7_2009.glb` to a Gazebo-compatible textured OBJ.
 6. Starts `gzserver` and waits for the world to initialize.
-7. Opens the Gazebo graphical client.
+7. Starts the fog sensor model when enabled.
+8. Opens the Gazebo graphical client.
 
 Close the Gazebo window or press `Ctrl+C` in the launch terminal to stop the simulation server.
 
@@ -110,7 +113,8 @@ The ego dashboard lidar currently has:
 - Samples: 1,080 per scan
 - Update rate: 20 Hz
 - Message type: `sensor_msgs/msg/LaserScan`
-- Topic: `/ego/dashboard_lidar/scan`
+- Fog-affected topic: `/ego/dashboard_lidar/scan`
+- Unmodified Gazebo topic: `/ego/dashboard_lidar/clear_scan`
 - Frame: `dashboard_lidar`
 
 Inspect the scan in another terminal:
@@ -151,6 +155,110 @@ Check its update rate with:
 ```bash
 ros2 topic hz /ego/front_sonar/range
 ```
+
+## Radar
+
+The ego vehicle has a GPU ray-based front-radar approximation:
+
+- Horizontal FOV: 90 degrees
+- Range: 0.5–120 metres
+- Samples: 181 per scan
+- Update rate: 20 Hz
+- Message type: `sensor_msgs/msg/PointCloud2`
+- Raw topic: `/ego/front_radar/points`
+- Fog-degraded topic: `/ego/front_radar/fog_points`
+- Frame: `front_radar`
+
+This sensor provides radar-like spatial detections for weather experiments; it
+does not currently simulate Doppler velocity or radar cross section.
+
+## Local fog and sensor degradation
+
+By default, a 55 m long dense bank represented by 1400 translucent
+"super-particles" follows the road in front of the ego. Gazebo renders these
+tracers using the GPU. They follow a measured bimodal droplet distribution,
+move in independently advected layers, respond to wind and synthetic
+turbulence, and settle at 1.9 cm/s. Actual micrometre droplets are below screen
+resolution, so each rendered tracer represents many real droplets; sensor
+density comes from the microphysical extinction model rather than oversized
+collision spheres. The ROS 2 fog model simultaneously applies:
+
+- Beer–Lambert two-way extinction, range noise, intensity loss, dropouts, and
+  stochastic backscatter to lidar.
+- Koschmieder-style contrast loss and airlight to the RGB camera.
+- Weaker two-way attenuation, detection loss, intensity loss, and range noise
+  to the radar point cloud.
+
+The clean topics remain available for direct comparison:
+
+| Sensor | Clean topic | Fog-degraded topic |
+|---|---|---|
+| Camera | `/ego/dashboard_camera/image_raw` | `/ego/dashboard_camera/fog_image` |
+| Lidar | `/ego/dashboard_lidar/clear_scan` | `/ego/dashboard_lidar/scan` (`/fog_scan` alias) |
+| Radar | `/ego/front_radar/points` | `/ego/front_radar/fog_points` |
+
+For exceptionally dense fog with 15 m meteorological visibility:
+
+```bash
+EGO_FOG_VISIBILITY_M=15 EGO_FOG_PARTICLES=1400 EGO_FOG_LWC_G_M3=0.7 ./run_gazebo.sh
+```
+
+For lighter fog:
+
+```bash
+EGO_FOG_VISIBILITY_M=150 EGO_FOG_PARTICLES=250 EGO_FOG_LWC_G_M3=0.08 ./run_gazebo.sh
+```
+
+Disable the local fog bank and filtering completely:
+
+```bash
+EGO_FOG_ENABLED=0 ./run_gazebo.sh
+```
+
+Available parameters:
+
+- `EGO_FOG_ENABLED`: `1` enables fog and `0` disables it; default `1`
+- `EGO_FOG_VISIBILITY_M`: meteorological visibility used to calculate optical extinction; default `20`
+- `EGO_FOG_PARTICLES`: rendered super-particle count from 100–2400; default `1400`
+- `EGO_FOG_LWC_G_M3`: liquid-water content; default `0.7 g/m³` for severe fog
+- `EGO_FOG_TURBULENCE_MPS`: unresolved turbulent velocity; default `0.35 m/s`
+- `EGO_FOG_RADAR_DB_KM_PER_G_M3`: one-way radar attenuation coefficient; default `4.2 dB/km/(g/m³)`
+
+Use `./view_camera.sh`, then select `/ego/dashboard_camera/fog_image` to see
+the filtered camera stream. Use RViz `LaserScan` and `PointCloud2` displays to
+compare the clean and fog-degraded lidar and radar topics.
+
+When fog is enabled, Gazebo's clear geometric lidar-ray debug fan is hidden
+because it cannot display optical attenuation. Visualize
+`/ego/dashboard_lidar/scan` in RViz to see the actual fog-affected scan. Set
+RViz's fixed frame to `dashboard_lidar`. When fog is disabled, the native
+Gazebo ray visualization and `/ego/dashboard_lidar/scan` are restored.
+
+### Fog-model research basis
+
+The default microphysics follows reported dense/radiation-fog observations:
+
+- Droplets use a bimodal lognormal approximation centered near 2.2 and 6 μm
+  radius, clamped to 0.5–20 μm. Measurements commonly place most radiation-fog
+  radii below 10 μm, with mature droplets sometimes reaching 10–15 μm.
+- Measurements associate approximately `0.5 g/m³` liquid-water content with
+  heavy fog near 50 m visibility. The default `0.7 g/m³`, 20 m sensor preset
+  deliberately represents a severe autonomous-driving test case.
+- Mean settling is `1.9 cm/s`, as recommended for numerical fog prediction.
+- Visible extinction uses the meteorological-visibility relationship
+  `beta = 3.912 / visibility`; lidar applies the resulting extinction twice for
+  the outgoing and returning beam.
+- Radar attenuation is calculated from liquid-water content and is much weaker
+  than optical attenuation.
+
+References: [Klein and Dabas, 2014](https://doi.org/10.5194/amt-7-1277-2014),
+[Boers et al., 2013](https://doi.org/10.1175/JTECH-D-12-00081.1),
+[Kunkel, 1984](https://doi.org/10.1175/1520-0450(1984)023%3C0034:PODTVA%3E2.0.CO;2),
+and [Vishwakarma et al., 2023](https://doi.org/10.5194/amt-16-1211-2023).
+
+The radar coefficient is a configurable conservative approximation based on
+warm-liquid-cloud measurements near 95 GHz; it should not be interpreted as a
+calibrated 77 GHz automotive-radar propagation model.
 
 List all ego sensor topics:
 
@@ -211,7 +319,8 @@ Available settings:
 
 - `WIND_X_MPS`: wind velocity along the world X axis; default `3.0` m/s
 - `WIND_Y_MPS`: wind velocity along the world Y axis; default `1.0` m/s
-- `VISIBILITY_M`: distance at which linear fog becomes opaque; default `700` m
+- `FOG_START_M`: distance from the camera where rendered fog begins; default `1.5` m
+- `VISIBILITY_M`: distance where Gazebo's rendered fog becomes opaque; default `35` m
 - `SUN_LEVEL`: RGB brightness of the directional sunlight; default `0.9`
 
 For clear, calm conditions:
@@ -285,13 +394,17 @@ source install/setup.bash
 
 ## Record sensor data
 
-Record the lidar and dashboard camera:
+Record clean and fog-degraded sensor data:
 
 ```bash
 ros2 bag record \
   /ego/dashboard_lidar/scan \
+  /ego/dashboard_lidar/fog_scan \
+  /ego/front_radar/points \
+  /ego/front_radar/fog_points \
   /ego/front_sonar/range \
   /ego/dashboard_camera/image_raw \
+  /ego/dashboard_camera/fog_image \
   /ego/dashboard_camera/camera_info
 ```
 

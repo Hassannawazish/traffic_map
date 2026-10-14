@@ -27,6 +27,8 @@ target_include_directories(generate_gazebo_assets PRIVATE src)
 target_link_libraries(generate_gazebo_assets map_parser)
 add_executable(convert_glb_to_obj src/convert_glb_to_obj.cpp)
 target_link_libraries(convert_glb_to_obj assimp::assimp)
+add_executable(fog_sensor_filter src/fog_sensor_filter.cpp)
+ament_target_dependencies(fog_sensor_filter rclcpp sensor_msgs)
 add_library(traffic_world_plugin SHARED src/traffic_world_plugin.cpp src/dstar_lite.cpp)
 target_include_directories(traffic_world_plugin PRIVATE src ${GAZEBO_INCLUDE_DIRS})
 target_link_libraries(traffic_world_plugin ${GAZEBO_LIBRARIES})
@@ -37,7 +39,7 @@ if(BUILD_TESTING)
   add_test(NAME dstar_lite_planning COMMAND dstar_lite_test)
 endif()
 install(TARGETS road_visualization DESTINATION lib/${PROJECT_NAME})
-install(TARGETS generate_gazebo_assets convert_glb_to_obj traffic_world_plugin
+install(TARGETS generate_gazebo_assets convert_glb_to_obj fog_sensor_filter traffic_world_plugin
   RUNTIME DESTINATION lib/${PROJECT_NAME}
   LIBRARY DESTINATION lib)
 install(FILES src/bjb_sangjani_full.xodr DESTINATION share/${PROJECT_NAME}/maps)

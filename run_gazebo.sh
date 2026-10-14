@@ -14,8 +14,15 @@ SOURCE_CAR_MESH="${TRAFFIC_CAR_MESH:-${PROJECT_DIR}/cars/Audi_Q7_2009.glb}"
 export TRAFFIC_VEHICLE_COUNT="${TRAFFIC_VEHICLE_COUNT:-24}"
 export WIND_X_MPS="${WIND_X_MPS:-3.0}"
 export WIND_Y_MPS="${WIND_Y_MPS:-1.0}"
-export VISIBILITY_M="${VISIBILITY_M:-700}"
+export VISIBILITY_M="${VISIBILITY_M:-35}"
+export FOG_START_M="${FOG_START_M:-1.5}"
 export SUN_LEVEL="${SUN_LEVEL:-0.9}"
+export EGO_FOG_ENABLED="${EGO_FOG_ENABLED:-1}"
+export EGO_FOG_VISIBILITY_M="${EGO_FOG_VISIBILITY_M:-20}"
+export EGO_FOG_PARTICLES="${EGO_FOG_PARTICLES:-1400}"
+export EGO_FOG_LWC_G_M3="${EGO_FOG_LWC_G_M3:-0.7}"
+export EGO_FOG_TURBULENCE_MPS="${EGO_FOG_TURBULENCE_MPS:-0.35}"
+export EGO_FOG_RADAR_DB_KM_PER_G_M3="${EGO_FOG_RADAR_DB_KM_PER_G_M3:-4.2}"
 if [[ ! -f "${SOURCE_CAR_MESH}" ]]; then
   echo "Car mesh not found: ${SOURCE_CAR_MESH}" >&2
   exit 1
@@ -33,6 +40,7 @@ sed -e "s|ROAD_SURFACE_PATH|${ASSET_DIR}/road_surface.obj|g" \
     -e "s|GUARDRAILS_PATH|${ASSET_DIR}/guardrails.obj|g" \
     -e "s|WIND_X|${WIND_X_MPS}|g" \
     -e "s|WIND_Y|${WIND_Y_MPS}|g" \
+    -e "s|FOG_START|${FOG_START_M}|g" \
     -e "s|FOG_END|${VISIBILITY_M}|g" \
     -e "s|SUN_LEVEL|${SUN_LEVEL}|g" \
     "${PROJECT_DIR}/gazebo/traffic.world" > "${WORLD_FILE}"
@@ -57,7 +65,12 @@ echo "Using Gazebo master: ${GAZEBO_MASTER_URI}"
 
 gzserver --verbose "${WORLD_FILE}" &
 GAZEBO_SERVER_PID=$!
+FOG_FILTER_PID=""
 cleanup_gazebo() {
+  if [[ -n "${FOG_FILTER_PID}" ]] && kill -0 "${FOG_FILTER_PID}" 2>/dev/null; then
+    kill "${FOG_FILTER_PID}" 2>/dev/null || true
+    wait "${FOG_FILTER_PID}" 2>/dev/null || true
+  fi
   if kill -0 "${GAZEBO_SERVER_PID}" 2>/dev/null; then
     kill "${GAZEBO_SERVER_PID}" 2>/dev/null || true
     wait "${GAZEBO_SERVER_PID}" 2>/dev/null || true
@@ -68,5 +81,9 @@ sleep 2
 if ! kill -0 "${GAZEBO_SERVER_PID}" 2>/dev/null; then
   echo "Gazebo server stopped before the GUI could start." >&2
   wait "${GAZEBO_SERVER_PID}"
+fi
+if [[ "${EGO_FOG_ENABLED}" != "0" ]]; then
+  ros2 run traffic_map fog_sensor_filter &
+  FOG_FILTER_PID=$!
 fi
 gzclient --verbose

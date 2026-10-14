@@ -8,6 +8,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <fstream>
+#include <random>
 #include <sstream>
 #include <vector>
 
@@ -24,10 +25,14 @@ class TrafficWorldPlugin : public WorldPlugin {
   double ego_change_from_{0.},ego_change_to_{0.},ego_lateral_velocity_{0.};
   std::size_t ego_change_source_lane_{0},ego_change_target_lane_{0};
   bool ego_lane_change_active_{false};
+  bool ego_fog_enabled_{false};
+  std::size_t ego_fog_layer_count_{0};
+  double ego_fog_wind_x_{0.},ego_fog_wind_y_{0.},ego_fog_turbulence_{.35};
   ignition::math::Vector2d sample(double s) const {s=std::fmod(s,arc_.back());if(s<0)s+=arc_.back();auto it=std::upper_bound(arc_.begin(),arc_.end(),s);
     std::size_t b=std::min<std::size_t>(std::distance(arc_.begin(),it),arc_.size()-1),a=b-1; double t=(s-arc_[a])/(arc_[b]-arc_[a]); return route_[a]+(route_[b]-route_[a])*t;}
  public:void Load(physics::WorldPtr world,sdf::ElementPtr) override {world_=world; const char *path=std::getenv("TRAFFIC_ROUTE_CSV"); if(!path)return;
     const char *car_mesh=std::getenv("TRAFFIC_CAR_MESH"); if(!car_mesh)return;
+    ego_fog_enabled_=!std::getenv("EGO_FOG_ENABLED")||std::string(std::getenv("EGO_FOG_ENABLED"))!="0";
     std::ifstream in(path);std::string line;while(std::getline(in,line)){std::replace(line.begin(),line.end(),',',' ');std::istringstream s(line);double x,y;if(s>>x>>y)route_.emplace_back(x,y);} if(route_.size()<2)return;
     arc_.assign(route_.size(),0);for(std::size_t i=1;i<route_.size();++i)arc_[i]=arc_[i-1]+route_[i].Distance(route_[i-1]);
     std::size_t count=24;
@@ -72,10 +77,17 @@ class TrafficWorldPlugin : public WorldPlugin {
           sdf<<"<visual name='front_sonar_red_ray_"<<ray<<"'><pose>"<<2.32+4.*std::cos(angle)<<" "<<4.*std::sin(angle)<<" -.28 0 0 "<<angle<<"</pose>"
             <<"<geometry><box><size>8 .025 .025</size></box></geometry><transparency>.18</transparency>"
             <<"<material><ambient>1 0 0 .82</ambient><diffuse>1 0 0 .82</diffuse><emissive>1 0 0 .82</emissive></material></visual>";}
-        sdf<<"<sensor name='dashboard_lidar' type='ray'><pose>2.75 0 .72 0 0 0</pose><always_on>true</always_on><visualize>true</visualize><update_rate>20</update_rate>"
+        sdf<<"<visual name='front_radar_housing'><pose>2.28 0 -.05 0 0 0</pose><geometry><box><size>.10 .44 .18</size></box></geometry>"
+          <<"<material><ambient>.025 .025 .03 1</ambient><diffuse>.06 .06 .07 1</diffuse></material></visual>"
+          <<"<sensor name='front_radar' type='gpu_ray'><pose>2.34 0 -.05 0 0 0</pose><always_on>true</always_on><visualize>false</visualize><update_rate>20</update_rate>"
+          <<"<ray><scan><horizontal><samples>181</samples><resolution>1</resolution><min_angle>-.785398</min_angle><max_angle>.785398</max_angle></horizontal></scan>"
+          <<"<range><min>.5</min><max>120</max><resolution>.10</resolution></range><noise><type>gaussian</type><mean>0</mean><stddev>.03</stddev></noise></ray>"
+          <<"<plugin name='front_radar_ros' filename='libgazebo_ros_ray_sensor.so'><ros><namespace>/ego/front_radar</namespace><remapping>~/out:=points</remapping></ros>"
+          <<"<output_type>sensor_msgs/PointCloud2</output_type><frame_name>front_radar</frame_name></plugin></sensor>"
+          <<"<sensor name='dashboard_lidar' type='ray'><pose>2.75 0 .72 0 0 0</pose><always_on>true</always_on><visualize>"<<(ego_fog_enabled_?"false":"true")<<"</visualize><update_rate>20</update_rate>"
           <<"<ray><scan><horizontal><samples>1080</samples><resolution>1</resolution><min_angle>-3.14159265</min_angle><max_angle>3.14159265</max_angle></horizontal></scan>"
           <<"<range><min>.20</min><max>80</max><resolution>.02</resolution></range><noise><type>gaussian</type><mean>0</mean><stddev>.01</stddev></noise></ray>"
-          <<"<plugin name='dashboard_lidar_ros' filename='libgazebo_ros_ray_sensor.so'><ros><namespace>/ego/dashboard_lidar</namespace><remapping>~/out:=scan</remapping></ros>"
+          <<"<plugin name='dashboard_lidar_ros' filename='libgazebo_ros_ray_sensor.so'><ros><namespace>/ego/dashboard_lidar</namespace><remapping>~/out:="<<(ego_fog_enabled_?"clear_scan":"scan")<<"</remapping></ros>"
           <<"<output_type>sensor_msgs/LaserScan</output_type><frame_name>dashboard_lidar</frame_name></plugin></sensor>"
           <<"<sensor name='dashboard_camera' type='camera'><pose>1.26 0 .84 0 0 0</pose><always_on>true</always_on><visualize>false</visualize><update_rate>20</update_rate>"
           <<"<camera><horizontal_fov>1.570796</horizontal_fov><image><width>640</width><height>360</height><format>R8G8B8</format></image>"
@@ -108,6 +120,26 @@ class TrafficWorldPlugin : public WorldPlugin {
       for(double center : {-10.48,-10.14}){for(double side : {-.11,.11})sign<<"<visual name='v"<<center<<side<<"'><pose>-.08 "<<center+side<<" 2.75 0 0 0</pose><geometry><box><size>.04 .055 .40</size></box></geometry><material><ambient>1 .82 0 1</ambient><diffuse>1 .82 0 1</diffuse><emissive>.35 .25 0 1</emissive></material></visual>";
         for(double height : {2.56,2.94})sign<<"<visual name='h"<<center<<height<<"'><pose>-.08 "<<center<<" "<<height<<" 0 0 0</pose><geometry><box><size>.04 .25 .055</size></box></geometry><material><ambient>1 .82 0 1</ambient><diffuse>1 .82 0 1</diffuse><emissive>.35 .25 0 1</emissive></material></visual>";}
       sign<<"</link></model></sdf>";world_->InsertModelString(sign.str());
+    }
+    auto environment_double=[](const char *name,double fallback){const char *value=std::getenv(name);if(!value)return fallback;
+      try{return std::stod(value);}catch(const std::exception &){return fallback;}};
+    ego_fog_wind_x_=environment_double("WIND_X_MPS",3.);ego_fog_wind_y_=environment_double("WIND_Y_MPS",1.);
+    ego_fog_turbulence_=std::clamp(environment_double("EGO_FOG_TURBULENCE_MPS",.35),0.,2.);
+    if(ego_fog_enabled_){std::size_t particle_count=1400;if(const char *value=std::getenv("EGO_FOG_PARTICLES")){
+        try{particle_count=std::clamp<std::size_t>(std::stoul(value),100,2400);}catch(const std::exception &) {}}
+      ego_fog_layer_count_=std::clamp<std::size_t>((particle_count+149)/150,4,12);
+      std::mt19937 generator(73021);std::uniform_real_distribution<double> uniform(0.,1.);
+      std::lognormal_distribution<double> small_drops(std::log(2.2),std::log(1.45)),large_drops(std::log(6.),std::log(1.35));
+      std::bernoulli_distribution large_mode(.32);
+      for(std::size_t layer=0;layer<ego_fog_layer_count_;++layer){std::ostringstream fog;
+        fog<<"<sdf version='1.6'><model name='ego_fog_layer_"<<layer<<"'><static>true</static><pose>0 0 -50 0 0 0</pose><link name='fog'>";
+        for(std::size_t i=layer;i<particle_count;i+=ego_fog_layer_count_){const double radius_um=std::clamp(large_mode(generator)?large_drops(generator):small_drops(generator),.5,20.);
+          const double x=1.5+54.*uniform(generator),y=24.*(uniform(generator)-.5),z=.08+5.*std::pow(uniform(generator),.72);
+          const double display_radius=.010+.032*std::sqrt((radius_um-.5)/19.5),transparency=.62+.25*uniform(generator);
+          fog<<"<visual name='superdroplet_"<<i<<"'><pose>"<<x<<" "<<y<<" "<<z<<" 0 0 0</pose><cast_shadows>false</cast_shadows><transparency>"<<transparency
+             <<"</transparency><geometry><sphere><radius>"<<display_radius<<"</radius></sphere></geometry><material><lighting>false</lighting>"
+             <<"<ambient>.76 .80 .82 1</ambient><diffuse>.82 .85 .86 1</diffuse><emissive>.16 .17 .18 1</emissive></material></visual>";}
+        fog<<"</link></model></sdf>";world_->InsertModelString(fog.str());}
     }
     constexpr std::size_t pedestrian_count=12;
     pedestrian_distance_.resize(pedestrian_count);pedestrian_speed_.resize(pedestrian_count);
@@ -206,7 +238,16 @@ class TrafficWorldPlugin : public WorldPlugin {
       distance_[i]=std::fmod(distance_[i]+direction_[i]*speed_[i]*dt,arc_.back());if(distance_[i]<0)distance_[i]+=arc_.back();}
     if(auto ego=world_->ModelByName("traffic_vehicle_0")){if(auto sun=world_->ModelByName("visible_sun")){
       const auto pose=ego->WorldPose();const double yaw=pose.Rot().Yaw();
-      sun->SetWorldPose({pose.Pos().X()+std::cos(yaw)*210.,pose.Pos().Y()+std::sin(yaw)*210.,90.,0,0,0});}}
+      sun->SetWorldPose({pose.Pos().X()+std::cos(yaw)*210.,pose.Pos().Y()+std::sin(yaw)*210.,90.,0,0,0});}
+      if(ego_fog_enabled_){const auto pose=ego->WorldPose();const double yaw=pose.Rot().Yaw();
+        const double wind_along=ego_fog_wind_x_*std::cos(yaw)+ego_fog_wind_y_*std::sin(yaw);
+        const double wind_cross=-ego_fog_wind_x_*std::sin(yaw)+ego_fog_wind_y_*std::cos(yaw);
+        for(std::size_t layer=0;layer<ego_fog_layer_count_;++layer){if(auto fog=world_->ModelByName("ego_fog_layer_"+std::to_string(layer))){
+          const double phase=.83*layer,forward=.22*wind_along*std::sin(.11*sim_time+phase)+ego_fog_turbulence_*.35*std::sin(.71*sim_time+phase);
+          const double cross=.13*wind_cross+ego_fog_turbulence_*(std::sin(.37*sim_time+phase)+.35*std::sin(1.13*sim_time+2.*phase));
+          const double settling=.019*std::fmod(sim_time+1.7*layer,12.);
+          fog->SetWorldPose({pose.Pos().X()+std::cos(yaw)*forward-std::sin(yaw)*cross,
+            pose.Pos().Y()+std::sin(yaw)*forward+std::cos(yaw)*cross,.05-settling,0,0,yaw});}}}}
     for(std::size_t i=0;i<signal_distance_.size();++i){double phase=std::fmod(now.Double()+i*7.,27.);std::size_t active=phase<12.?2:(phase<15.?1:0);
       auto p=sample(signal_distance_[i]);double yaw=signal_yaw_[i];double x=p.X()+std::sin(yaw)*3.2,y=p.Y()-std::cos(yaw)*3.2;
       for(std::size_t light=0;light<3;++light){auto lamp=world_->ModelByName("traffic_signal_"+std::to_string(i)+"_lamp_"+std::to_string(light));if(!lamp)continue;
